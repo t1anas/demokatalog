@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OS Kacamata — Template Website</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-light:#F6F3EC;
+    --bg-panel:#FFFFFF;
+    --bg-dark:#15181C;
+    --ink:#1B1D21;
+    --ink-soft:#5C5F66;
+    --line:#DDD6C6;
+    --line-dark:#2A2E34;
+    --gold:#B8862F;
+    --gold-soft:#E8D9B8;
+    --teal:#3F6259;
+    --radius-lens: 999px;
+    --maxw: 1120px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--bg-light);
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    margin:0 0 .4em 0;
+    letter-spacing:-0.01em;
+  }
+  p{margin:0 0 1em 0; color:var(--ink-soft);}
+  a{color:inherit;}
+  img,svg{display:block; max-width:100%;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+  section{padding:96px 0;}
+  @media (max-width:860px){ section{padding:72px 0;} }
+  @media (max-width:560px){ section{padding:56px 0;} .wrap{padding:0 18px;} }
+  @media (max-width:380px){ .wrap{padding:0 14px;} }
+
+  header.site-nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(246,243,236,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:16px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  @media (max-width:560px){ .nav-inner{padding:14px 18px;} }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Fraunces',serif; font-size:20px; font-weight:600;
+    text-decoration:none; color:var(--ink); flex:none;
+  }
+  @media (max-width:380px){ .brand{font-size:17px;} }
+  .brand-mark{
+    width:30px; height:20px;
+    border:2px solid var(--gold);
+    border-radius:50% / 60%;
+    position:relative; flex:none;
+  }
+  .brand-mark::after{
+    content:"";
+    position:absolute; left:100%; top:50%; width:8px; height:2px;
+    background:var(--gold); transform:translateY(-50%);
+  }
+  nav.links{display:flex; gap:28px; list-style:none; margin:0; padding:0;}
+  nav.links a{
+    text-decoration:none; font-size:14.5px; color:var(--ink);
+    padding:6px 0; border-bottom:1px solid transparent; white-space:nowrap;
+  }
+  nav.links a:hover{border-bottom-color:var(--gold);}
+  .nav-cta{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--ink); color:#fff; text-decoration:none;
+    padding:10px 18px; border-radius:var(--radius-lens); font-size:14px; font-weight:500;
+    flex:none;
+  }
+  .menu-btn{display:none; background:none; border:none; font-size:22px; cursor:pointer; flex:none;}
+  @media (max-width:900px){
+    nav.links{
+      position:fixed; inset:60px 0 0 0; background:var(--bg-light);
+      flex-direction:column; padding:32px 24px; gap:18px;
+      transform:translateY(-110%); transition:transform .25s ease; overflow-y:auto;
+    }
+    nav.links.open{transform:translateY(0);}
+    nav.links a{font-size:18px;}
+    .menu-btn{display:block;}
+    .nav-cta{display:none;}
+  }
+
+  #beranda{padding-top:64px; padding-bottom:64px;}
+  .hero{
+    display:grid; grid-template-columns:1.1fr .9fr; gap:56px; align-items:center;
+  }
+  @media (max-width:900px){ .hero{grid-template-columns:1fr; gap:36px;} }
+  .eyebrow{
+    font-size:13px; color:var(--gold); font-weight:600; margin-bottom:14px;
+  }
+  .hero h1{font-size:clamp(30px,6vw,54px); line-height:1.1;}
+  .hero p.lead{font-size:16.5px; max-width:46ch;}
+  .hero-actions{display:flex; gap:14px; margin-top:28px; flex-wrap:wrap;}
+  .btn-primary, .btn-secondary{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 24px; border-radius:var(--radius-lens);
+    text-decoration:none; font-size:15px; font-weight:600;
+    border:1px solid transparent; cursor:pointer; background:none;
+    font-family:inherit;
+  }
+  .btn-primary{background:var(--gold); color:#fff;}
+  .btn-secondary{border:1px solid var(--line); color:var(--ink);}
+  @media (max-width:380px){
+    .hero-actions{flex-direction:column;}
+    .hero-actions a{width:100%; text-align:center;}
+  }
+  .hero-visual{
+    aspect-ratio:4/5; border-radius:24px; background:var(--bg-dark);
+    display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
+  }
+  @media (max-width:560px){ .hero-visual{aspect-ratio:1/1;} }
+  .hero-visual .lens-frame{
+    width:62%; aspect-ratio:2/1; border:6px solid var(--gold-soft);
+    border-radius:50%; position:relative;
+  }
+  .hero-visual .lens-frame::before,
+  .hero-visual .lens-frame::after{
+    content:""; position:absolute; top:50%; width:16%; height:4px; background:var(--gold-soft);
+  }
+  .hero-visual .lens-frame::before{ left:-16%; }
+  .hero-visual .lens-frame::after{ right:-16%; }
+  .placeholder-label{
+    position:absolute; bottom:18px; left:18px; right:18px;
+    font-size:12px; color:#B8BBC2; letter-spacing:.02em;
+  }
+  .promo-banner{
+    margin-top:56px; border:1px solid var(--line); border-radius:20px;
+    padding:22px 26px; display:flex; align-items:center; justify-content:space-between;
+    background:var(--bg-panel); gap:16px; flex-wrap:wrap;
+  }
+  .promo-banner strong{font-family:'Fraunces',serif; font-weight:500; font-size:18px;}
+
+  .section-head{max-width:56ch; margin-bottom:44px;}
+  .section-head-row{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap;
+    margin-bottom:44px;
+  }
+  .section-head-row .section-head{margin-bottom:0;}
+  .section-head .eyebrow{margin-bottom:10px;}
+  .section-head h2{font-size:clamp(24px,4.4vw,36px);}
+
+  #profil{background:var(--bg-panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .profil-grid{display:grid; grid-template-columns:.85fr 1.15fr; gap:56px; align-items:start;}
+  @media (max-width:900px){ .profil-grid{grid-template-columns:1fr; gap:32px;} }
+  .profil-photo{
+    aspect-ratio:3/4; border-radius:20px; background:var(--bg-light);
+    border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    color:var(--ink-soft); font-size:13px;
+  }
+  @media (max-width:560px){ .profil-photo{aspect-ratio:16/10;} }
+  .keunggulan-list{display:grid; gap:22px; margin-top:8px;}
+  .keunggulan-item{display:flex; gap:16px;}
+  .keunggulan-num{
+    font-family:'Fraunces',serif; color:var(--gold); font-size:20px; flex:none; width:32px;
+  }
+  .keunggulan-item h3{font-size:17px; margin-bottom:4px;}
+  .keunggulan-item p{font-size:14.5px; margin:0;}
+
+  .filter-row{display:flex; gap:10px; margin-bottom:32px; flex-wrap:wrap;}
+  .filter-chip{
+    border:1px solid var(--line); background:var(--bg-panel); padding:8px 16px;
+    border-radius:var(--radius-lens); font-size:13.5px; cursor:pointer;
+  }
+  .filter-chip.active{background:var(--ink); color:#fff; border-color:var(--ink);}
+  .product-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  @media (max-width:900px){ .product-grid{grid-template-columns:repeat(2,1fr); gap:18px;} }
+  @media (max-width:560px){ .product-grid{grid-template-columns:1fr;} }
+  .product-card{
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:18px;
+    overflow:hidden;
+  }
+  .product-thumb{
+    aspect-ratio:1/1; background:var(--bg-light); display:flex; align-items:center;
+    justify-content:center; color:var(--ink-soft); font-size:13px; position:relative;
+  }
+  .product-thumb .lens-icon{
+    width:56%; aspect-ratio:2.4/1; border:3px solid var(--line); border-radius:50%; position:relative;
+  }
+  .product-body{padding:18px 18px 22px;}
+  .product-body h3{font-size:15.5px; margin-bottom:4px;}
+  .product-meta{display:flex; justify-content:space-between; align-items:center; margin-top:12px;}
+  .price{font-family:'Fraunces',serif; font-size:17px; color:var(--ink);}
+  .stock-tag{font-size:12px; color:var(--teal); font-weight:600;}
+  .see-all-wrap{display:flex; justify-content:center; margin-top:40px;}
+
+  #galeri{background:var(--bg-dark); color:#fff;}
+  #galeri .section-head p{color:#B8BBC2;}
+  #galeri .section-head h2{color:#fff;}
+  .gallery-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:150px; gap:14px;
+  }
+  .gallery-grid > div:nth-child(1){grid-column:span 2; grid-row:span 2;}
+  .gallery-grid > div:nth-child(4){grid-column:span 2;}
+  @media (max-width:720px){
+    .gallery-grid{grid-template-columns:repeat(2,1fr); grid-auto-rows:130px;}
+    .gallery-grid > div:nth-child(1){grid-column:span 2; grid-row:span 1;}
+    .gallery-grid > div:nth-child(4){grid-column:span 1;}
+  }
+  .gallery-item{
+    background:var(--line-dark); border-radius:14px; display:flex; align-items:flex-end;
+    padding:12px; font-size:12px; color:#8B8F98; border:1px solid #23272D;
+  }
+  .testi-strip{
+    margin-top:56px; display:grid; grid-template-columns:repeat(2,1fr); gap:20px;
+  }
+  @media (max-width:720px){ .testi-strip{grid-template-columns:1fr;} }
+  .testi-card{
+    background:#1D2127; border:1px solid #262B32; border-radius:16px; padding:22px;
+  }
+  .testi-card p{color:#C7CAD1; font-size:14.5px; margin-bottom:14px;}
+  .testi-name{font-size:13px; color:var(--gold-soft); font-weight:600;}
+
+  .kontak-grid{display:grid; grid-template-columns:.9fr 1.1fr; gap:48px;}
+  @media (max-width:900px){ .kontak-grid{grid-template-columns:1fr; gap:28px;} }
+  .info-block{display:grid; gap:22px;}
+  .info-row{display:flex; gap:14px;}
+  .info-icon{
+    width:38px; height:38px; border-radius:50%; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; flex:none; font-size:15px;
+  }
+  .info-row h3{font-size:15px; margin-bottom:2px;}
+  .info-row p{font-size:14px; margin:0;}
+  .map-frame{
+    border-radius:18px; overflow:hidden; border:1px solid var(--line); aspect-ratio:4/3;
+  }
+  .map-frame iframe{width:100%; height:100%; border:0;}
+
+  #sosial{background:var(--bg-panel); border-top:1px solid var(--line);}
+  .sosial-row{display:grid; grid-template-columns:repeat(2,1fr); gap:20px;}
+  @media (max-width:720px){ .sosial-row{grid-template-columns:1fr;} }
+  .sosial-card{
+    border:1px solid var(--line); border-radius:18px; padding:24px;
+    display:flex; align-items:center; gap:16px; text-decoration:none; color:var(--ink);
+  }
+  .sosial-mark{
+    width:46px; height:46px; border-radius:50%; background:var(--bg-light);
+    display:flex; align-items:center; justify-content:center; font-size:19px; flex:none;
+  }
+  .sosial-card h3{font-size:15.5px; margin-bottom:2px;}
+  .sosial-card p{font-size:13.5px; margin:0;}
+
+  footer{background:var(--bg-dark); color:#8B8F98; padding:56px 0 28px;}
+  @media (max-width:560px){ footer{padding:40px 0 22px;} }
+  .footer-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px; margin-bottom:40px;}
+  @media (max-width:720px){ .footer-grid{grid-template-columns:1fr; gap:28px;} }
+  footer h4{color:#fff; font-size:13.5px; font-weight:600; margin:0 0 14px; letter-spacing:.02em;}
+  footer .brand{color:#fff;}
+  footer ul{list-style:none; margin:0; padding:0; display:grid; gap:10px; font-size:14px;}
+  footer a{text-decoration:none; color:#8B8F98;}
+  footer a:hover{color:#fff;}
+  .footer-bottom{
+    border-top:1px solid #262B32; padding-top:22px; font-size:12.5px;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  .wa-float{
+    position:fixed; right:20px; bottom:20px; z-index:60;
+    width:56px; height:56px; border-radius:50%; background:#25D366;
+    display:flex; align-items:center; justify-content:center;
+    text-decoration:none; box-shadow:0 8px 22px rgba(0,0,0,.22);
+  }
+  @media (max-width:560px){ .wa-float{width:50px; height:50px; right:16px; bottom:16px;} }
+  .wa-float svg{width:26px; height:26px;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="nav-inner">
+    <a href="#beranda" class="brand"><span class="brand-mark"></span> OS Kacamata</a>
+    <nav class="links" id="navLinks">
+      <a href="#beranda">Beranda</a>
+      <a href="#profil">Profil Toko</a>
+      <a href="katalog.html#katalog">Katalog</a>
+      <a href="#galeri">Galeri</a>
+      <a href="#kontak">Kontak</a>
+      <a href="#sosial">Sosial Media</a>
+    </nav>
+    <a class="nav-cta" href="https://wa.me/6281234567890" target="_blank" rel="noopener">Chat WhatsApp</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Buka menu">☰</button>
+  </div>
+</header>
+
+<section id="beranda">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">OS KACAMATA — TAGLINE</div>
+        <h1>Lihat setiap detail<br>lebih jernih.</h1>
+        <p class="lead">[kalimat pembuka singkat tentang OS Kacamata — jenis produk, keunggulan utama, dan siapa target pelanggannya.]</p>
+        <div class="hero-actions">
+          <a href="katalog.html#katalog" class="btn-primary">Lihat Katalog</a>
+          <a href="dashboard.html#kontak" class="btn-secondary">Kunjungi Toko</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="lens-frame"></div>
+        <div class="placeholder-label">[foto/banner utama toko]</div>
+      </div>
+    </div>
+
+    <div class="promo-banner">
+      <div>
+        <strong>[Judul Promo — mis. Diskon 20% Semua Frame]</strong>
+        <p style="margin:6px 0 0;">[Deskripsi singkat promo dan periode berlaku]</p>
+      </div>
+      <a href="#katalog" class="btn-secondary">Klaim Sekarang</a>
+    </div>
+  </div>
+</section>
+
+<section id="profil">
+  <div class="wrap">
+    <div class="profil-grid">
+      <div class="profil-photo">[foto toko]</div>
+      <div>
+        <div class="eyebrow">PROFIL TOKO</div>
+        <h2>Tentang OS Kacamata</h2>
+        <p>[latar belakang toko: sejak kapan berdiri, jenis layanan, dan cerita singkat berdirinya usaha.]</p>
+
+        <div class="keunggulan-list">
+          <div class="keunggulan-item">
+            <div class="keunggulan-num">01</div>
+            <div>
+              <h3>Visi</h3>
+              <p>[pernyataan visi toko.]</p>
+            </div>
+          </div>
+          <div class="keunggulan-item">
+            <div class="keunggulan-num">02</div>
+            <div>
+              <h3>Misi</h3>
+              <p>[ pernyataan misi toko.]</p>
+            </div>
+          </div>
+          <div class="keunggulan-item">
+            <div class="keunggulan-num">03</div>
+            <div>
+              <h3>Keunggulan</h3>
+              <p>[keunggulan dibanding toko lain, mis. pemeriksaan mata gratis, garansi frame, dll.]</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="katalog">
+  <div class="wrap">
+    <div class="section-head-row">
+      <div class="section-head">
+        <div class="eyebrow">KATALOG PRODUK</div>
+        <h2>Pilihan bingkai &amp; lensa</h2>
+        <p>[deskripsi singkat kategori produk yang dijual.]</p>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <span class="filter-chip active">Semua</span>
+      <span class="filter-chip">Kacamata Baca</span>
+      <span class="filter-chip">Kacamata Minus</span>
+      <span class="filter-chip">Kacamata Hitam</span>
+      <span class="filter-chip">Lensa Kontak</span>
+    </div>
+
+    <div class="product-grid">
+      <div class="product-card">
+        <div class="product-thumb"><div class="lens-icon"></div></div>
+        <div class="product-body">
+          <h3>[Nama Produk 1]</h3>
+          <p style="font-size:13px; margin:0;">[Spesifikasi singkat: bahan, ukuran, tipe lensa]</p>
+          <div class="product-meta">
+            <span class="price">Rp0</span>
+            <span class="stock-tag">Tersedia</span>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-thumb"><div class="lens-icon"></div></div>
+        <div class="product-body">
+          <h3>[Nama Produk 2]</h3>
+          <p style="font-size:13px; margin:0;">[Spesifikasi singkat: bahan, ukuran, tipe lensa]</p>
+          <div class="product-meta">
+            <span class="price">Rp0</span>
+            <span class="stock-tag">Tersedia</span>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-thumb"><div class="lens-icon"></div></div>
+        <div class="product-body">
+          <h3>[Nama Produk 3]</h3>
+          <p style="font-size:13px; margin:0;">[Spesifikasi singkat: bahan, ukuran, tipe lensa]</p>
+          <div class="product-meta">
+            <span class="price">Rp0</span>
+            <span class="stock-tag">Tersedia</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="see-all-wrap">
+      <a href="katalog.html" class="btn-primary">Lihat Semua Produk</a>
+    </div>
+  </div>
+</section>
+
+<section id="galeri">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">GALERI</div>
+      <h2>Dokumentasi &amp; testimoni</h2>
+      <p>[deskripsi singkat: foto toko, sampel produk, atau momen pelanggan.]</p>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-item">[Foto 1]</div>
+      <div class="gallery-item">[Foto 2]</div>
+      <div class="gallery-item">[Foto 3]</div>
+      <div class="gallery-item">[Foto 4]</div>
+      <div class="gallery-item">[Foto 5]</div>
+    </div>
+
+    <div class="testi-strip">
+      <div class="testi-card">
+        <p>"[kutipan testimoni pelanggan.]"</p>
+        <div class="testi-name">[Nama Pelanggan]</div>
+      </div>
+      <div class="testi-card">
+        <p>"[kutipan testimoni pelanggan.]"</p>
+        <div class="testi-name">[Nama Pelanggan]</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="kontak">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">KONTAK &amp; LOKASI</div>
+      <h2>Kunjungi atau hubungi kami</h2>
+    </div>
+
+    <div class="kontak-grid">
+      <div class="info-block">
+        <div class="info-row">
+          <div class="info-icon">📍</div>
+          <div>
+            <h3>Alamat</h3>
+            <p>[Optik Oskacamata Sultan Agung - Ponorogo
+Jl. Sultan Agung No.106, Sultanagung, Nologaten, Kec. Ponorogo, Kabupaten Ponorogo, Jawa Timur 63419]</p>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon">💬</div>
+          <div>
+            <h3>WhatsApp</h3>
+            <p><a href="https://wa.me/6281234567890" target="_blank" rel="noopener">[0823444555688]</a></p>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon">🕒</div>
+          <div>
+            <h3>Jam Operasional</h3>
+            <p>[Senin–Sabtu, 09.00–20.00]</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-frame">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3257.5676167211636!2d111.4751921!3d-7.862628899999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e799f003410b929%3A0x83a86f4ea367fb72!2sOptik%20Oskacamata%20Sultan%20Agung%20-%20Ponorogo!5e1!3m2!1sid!2sid!4v1788495926273!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sosial">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">SOSIAL MEDIA</div>
+      <h2>Ikuti OS Kacamata</h2>
+    </div>
+    <div class="sosial-row">
+      <a class="sosial-card" href="https://instagram.com/" target="_blank" rel="noopener">
+        <div class="sosial-mark">IG</div>
+        <div>
+          <h3>Instagram</h3>
+          <p>[@username Instagram toko]</p>
+        </div>
+      </a>
+      <a class="sosial-card" href="https://tiktok.com/" target="_blank" rel="noopener">
+        <div class="sosial-mark">TT</div>
+        <div>
+          <h3>TikTok</h3>
+          <p>[@username TikTok toko]</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="dashboard.html#beranda" class="brand"><span class="brand-mark"></span> OS Kacamata</a>
+        <p style="margin-top:14px; font-size:13.5px; max-width:32ch;">[deskripsi singkat toko untuk footer.]</p>
+      </div>
+      <div>
+        <h4>Navigasi</h4>
+        <ul>
+          <li><a href="dashboard.html#profil">Profil Toko</a></li>
+          <li><a href="katalog.html#katalog">Katalog Produk</a></li>
+          <li><a href="dashboard.html#galeri">Galeri</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Hubungi Kami</h4>
+        <ul>
+          <li><a href="https://wa.me/6281234567890">[Nomor WhatsApp]</a></li>
+          <li><a href="dashboard.html#kontak">[Alamat Toko]</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 OS Kacamata. Semua hak dilindungi.</span>
+      <span>Template oleh Bytecraft Studio</span>
+    </div>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/6281234567890?text=Halo%20OS%20Kacamata%2C%20saya%20ingin%20bertanya" target="_blank" rel="noopener" aria-label="Chat via WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.28-1.38a9.9 9.9 0 0 0 4.76 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2Zm0 18.02a8.1 8.1 0 0 1-4.13-1.13l-.3-.18-3.13.82.83-3.05-.2-.31a8.09 8.09 0 0 1-1.24-4.26c0-4.48 3.65-8.12 8.14-8.12 4.48 0 8.13 3.64 8.13 8.12 0 4.48-3.65 8.11-8.1 8.11Zm4.47-6.08c-.24-.12-1.44-.71-1.66-.79-.22-.08-.39-.12-.55.12-.16.24-.63.79-.78.95-.14.16-.28.18-.53.06-.24-.12-1.02-.38-1.95-1.21-.72-.64-1.2-1.44-1.35-1.68-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.41-.55-.42h-.47c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.13 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28Z"/></svg>
+</a>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const navLinks = document.getElementById('navLinks');
+  menuBtn.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
