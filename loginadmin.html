@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Admin — OS Kacamata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-light:#F6F3EC;
+    --bg-panel:#FFFFFF;
+    --bg-dark:#15181C;
+    --ink:#1B1D21;
+    --ink-soft:#5C5F66;
+    --line:#DDD6C6;
+    --line-dark:#2A2E34;
+    --gold:#B8862F;
+    --gold-soft:#E8D9B8;
+    --teal:#3F6259;
+    --danger:#C0432F;
+    --radius-lens: 999px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--bg-dark);
+    line-height:1.55;
+    min-height:100vh;
+  }
+  h1,h2{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    margin:0 0 .3em 0;
+    letter-spacing:-0.01em;
+  }
+  p{margin:0; color:var(--ink-soft);}
+  a{color:inherit;}
+  .login-shell{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+  @media (max-width:900px){
+    .login-shell{grid-template-columns:1fr;}
+  }
+  .login-visual{
+    background:var(--bg-dark);
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:56px 56px;
+    position:relative;
+    overflow:hidden;
+  }
+  @media (max-width:900px){ .login-visual{display:none;} }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Fraunces',serif; font-size:20px; font-weight:600;
+    text-decoration:none; color:#fff;
+  }
+  .brand-mark{
+    width:30px; height:20px;
+    border:2px solid var(--gold);
+    border-radius:50% / 60%;
+    position:relative; flex:none;
+  }
+  .brand-mark::after{
+    content:"";
+    position:absolute; left:100%; top:50%; width:8px; height:2px;
+    background:var(--gold); transform:translateY(-50%);
+  }
+  .visual-center{
+    display:flex; align-items:center; justify-content:center; flex:1;
+  }
+  .lens-frame-big{
+    width:70%; aspect-ratio:2/1; border:6px solid var(--gold-soft);
+    border-radius:50%; position:relative;
+  }
+  .lens-frame-big::before,
+  .lens-frame-big::after{
+    content:""; position:absolute; top:50%; width:14%; height:4px; background:var(--gold-soft);
+  }
+  .lens-frame-big::before{ left:-14%; }
+  .lens-frame-big::after{ right:-14%; }
+  .visual-caption{max-width:36ch;}
+  .visual-caption .eyebrow{font-size:13px; color:var(--gold); font-weight:600; margin-bottom:10px;}
+  .visual-caption h2{font-size:26px; color:#fff;}
+  .visual-caption p{color:#B8BBC2; font-size:14.5px;}
+
+  .login-panel{
+    background:var(--bg-light);
+    display:flex; align-items:center; justify-content:center;
+    padding:48px 32px;
+  }
+  .login-card{
+    width:100%; max-width:400px;
+  }
+  .login-card .brand{color:var(--ink); margin-bottom:36px;}
+  @media (min-width:901px){ .login-card .brand{display:none;} }
+  .login-card .eyebrow{font-size:13px; color:var(--gold); font-weight:600; margin-bottom:10px;}
+  .login-card h1{font-size:clamp(24px,4vw,30px); margin-bottom:8px;}
+  .login-card > p{margin-bottom:32px; font-size:14.5px;}
+
+  .form-group{margin-bottom:20px;}
+  label{
+    display:block; font-size:13px; font-weight:600; margin-bottom:8px; color:var(--ink);
+  }
+  .input-wrap{position:relative;}
+  input[type="text"],
+  input[type="email"],
+  input[type="password"]{
+    width:100%; padding:13px 16px; border:1px solid var(--line); border-radius:12px;
+    font-size:14.5px; font-family:inherit; background:var(--bg-panel); color:var(--ink);
+    outline:none; transition:border-color .15s ease;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus{
+    border-color:var(--gold);
+  }
+  .toggle-pass{
+    position:absolute; right:14px; top:50%; transform:translateY(-50%);
+    background:none; border:none; cursor:pointer; font-size:12.5px; color:var(--ink-soft);
+    font-family:inherit; padding:4px;
+  }
+  .form-row{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:24px; font-size:13.5px;
+  }
+  .remember{display:flex; align-items:center; gap:8px; color:var(--ink-soft);}
+  .remember input{accent-color:var(--gold);}
+  .forgot-link{color:var(--gold); text-decoration:none; font-weight:600;}
+  .forgot-link:hover{text-decoration:underline;}
+
+  .btn-submit{
+    width:100%; padding:14px; border:none; border-radius:var(--radius-lens);
+    background:var(--gold); color:#fff; font-size:15px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn-submit:hover{opacity:.92;}
+
+  .error-message{
+    display:none; background:#FBEAE6; border:1px solid var(--danger); color:var(--danger);
+    padding:12px 14px; border-radius:10px; font-size:13.5px; margin-bottom:20px;
+  }
+  .error-message.show{display:block;}
+
+  .back-link{
+    display:inline-flex; align-items:center; gap:6px; margin-top:32px;
+    font-size:13.5px; color:var(--ink-soft); text-decoration:none;
+  }
+  .back-link:hover{color:var(--ink);}
+</style>
+</head>
+<body>
+
+<div class="login-shell">
+  <div class="login-visual">
+    <a href="dashboardadmin.html" class="brand"><span class="brand-mark"></span> OS Kacamata</a>
+    <div class="visual-center">
+      <div class="lens-frame-big"></div>
+    </div>
+    <div class="visual-caption">
+      <div class="eyebrow">PANEL ADMIN</div>
+      <h2>Kelola toko dari satu tempat.</h2>
+      <p>[Ganti dengan deskripsi singkat panel admin — mis. kelola produk, promo, dan pesanan OS Kacamata.]</p>
+    </div>
+  </div>
+
+  <div class="login-panel">
+    <div class="login-card">
+      <a href="index.html" class="brand"><span class="brand-mark"></span> OS Kacamata</a>
+      <div class="eyebrow">LOGIN ADMIN</div>
+      <h1>Masuk ke Dashboard</h1>
+      <p>Masukkan email dan kata sandi admin untuk melanjutkan.</p>
+
+      <div class="error-message" id="errorMessage">Email atau kata sandi salah. Silakan coba lagi.</div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="admin@oskacamata.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Kata Sandi</label>
+          <div class="input-wrap">
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
+            <button type="button" class="toggle-pass" id="togglePass">Lihat</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="remember">
+            <input type="checkbox" id="remember" name="remember">
+            Ingat saya
+          </label>
+          <a href="#" class="forgot-link">Lupa kata sandi?</a>
+        </div>
+
+        <button type="submit" class="btn-submit">Masuk</button>
+      </form>
+
+      <a href="dashboardadmin.html" class="back-link">← Kembali ke Beranda</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const togglePass = document.getElementById('togglePass');
+  const passwordInput = document.getElementById('password');
+  togglePass.addEventListener('click', () => {
+    const isHidden = passwordInput.type === 'password';
+    passwordInput.type = isHidden ? 'text' : 'password';
+    togglePass.textContent = isHidden ? 'Sembunyikan' : 'Lihat';
+  });
+
+  const loginForm = document.getElementById('loginForm');
+  const errorMessage = document.getElementById('errorMessage');
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    errorMessage.classList.remove('show');
+    window.location.href = 'dashboardadmin.html';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Admin — OS Kacamata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-light:#F6F3EC;
+    --bg-panel:#FFFFFF;
+    --bg-dark:#15181C;
+    --ink:#1B1D21;
+    --ink-soft:#5C5F66;
+    --line:#DDD6C6;
+    --line-dark:#2A2E34;
+    --gold:#B8862F;
+    --gold-soft:#E8D9B8;
+    --teal:#3F6259;
+    --danger:#C0432F;
+    --radius-lens: 999px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--bg-light);
+    line-height:1.5;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    margin:0 0 .3em 0;
+    letter-spacing:-0.01em;
+  }
+  p{margin:0; color:var(--ink-soft);}
+  a{color:inherit;}
+  button{font-family:inherit;}
+
+  .app-shell{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    min-height:100vh;
+  }
+  @media (max-width:900px){
+    .app-shell{grid-template-columns:1fr;}
+  }
+
+  .sidebar{
+    background:var(--bg-dark); color:#fff;
+    padding:28px 20px;
+    display:flex; flex-direction:column;
+    position:sticky; top:0; height:100vh;
+  }
+  @media (max-width:900px){
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; width:260px; height:100vh;
+      transform:translateX(-100%); transition:transform .25s ease; z-index:70;
+    }
+    .sidebar.open{transform:translateX(0);}
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Fraunces',serif; font-size:19px; font-weight:600;
+    text-decoration:none; color:#fff; margin-bottom:40px;
+  }
+  .brand-mark{
+    width:28px; height:18px;
+    border:2px solid var(--gold);
+    border-radius:50% / 60%;
+    position:relative; flex:none;
+  }
+  .brand-mark::after{
+    content:"";
+    position:absolute; left:100%; top:50%; width:7px; height:2px;
+    background:var(--gold); transform:translateY(-50%);
+  }
+  .side-label{
+    font-size:11px; letter-spacing:.06em; color:#7A7E86; font-weight:600;
+    margin:0 0 12px 4px; text-transform:uppercase;
+  }
+  .side-nav{display:flex; flex-direction:column; gap:4px; margin-bottom:auto;}
+  .side-link{
+    display:flex; align-items:center; gap:12px;
+    padding:11px 14px; border-radius:10px; text-decoration:none;
+    color:#C7CAD1; font-size:14.5px; font-weight:500; cursor:pointer;
+    border:none; background:none; width:100%; text-align:left;
+  }
+  .side-link .ic{
+    width:20px; height:20px; flex:none; display:flex; align-items:center; justify-content:center;
+    border-radius:50%; border:1.5px solid #4A4F58; font-size:11px;
+  }
+  .side-link:hover{background:#1D2127; color:#fff;}
+  .side-link.active{background:var(--gold); color:#fff;}
+  .side-link.active .ic{border-color:#fff;}
+  .side-foot{
+    border-top:1px solid #262B32; padding-top:18px; margin-top:18px;
+  }
+  .side-foot a{
+    display:flex; align-items:center; gap:12px; text-decoration:none;
+    color:#C7CAD1; font-size:14px; padding:10px 14px; border-radius:10px;
+  }
+  .side-foot a:hover{background:#1D2127; color:#fff;}
+
+  .main{padding:0;}
+  .topbar{
+    background:var(--bg-panel); border-bottom:1px solid var(--line);
+    padding:18px 32px; display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:40;
+  }
+  @media (max-width:560px){ .topbar{padding:16px 20px;} }
+  .topbar-title h1{font-size:19px;}
+  .topbar-title p{font-size:13px;}
+  .menu-btn{
+    display:none; background:none; border:1px solid var(--line); border-radius:8px;
+    font-size:18px; padding:6px 10px; cursor:pointer;
+  }
+  @media (max-width:900px){ .menu-btn{display:inline-block;} }
+  .topbar-right{display:flex; align-items:center; gap:14px;}
+  .admin-chip{
+    display:flex; align-items:center; gap:10px; font-size:13.5px; font-weight:600;
+  }
+  .avatar{
+    width:34px; height:34px; border-radius:50%; background:var(--gold-soft);
+    display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--ink);
+    font-weight:700;
+  }
+
+  .content{padding:32px;}
+  @media (max-width:560px){ .content{padding:20px;} }
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .card{
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:18px;
+    padding:28px;
+  }
+  @media (max-width:560px){ .card{padding:20px;} }
+  .card + .card{margin-top:20px;}
+  .card h2{font-size:17px; margin-bottom:6px;}
+  .card > p.card-sub{font-size:13.5px; margin-bottom:24px;}
+
+  .form-group{margin-bottom:20px;}
+  .form-group:last-child{margin-bottom:0;}
+  label{display:block; font-size:13px; font-weight:600; margin-bottom:8px;}
+  .hint{font-size:12.5px; color:var(--ink-soft); margin-top:6px;}
+  input[type="text"], input[type="tel"], input[type="url"]{
+    width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:10px;
+    font-size:14.5px; font-family:inherit; background:var(--bg-light); color:var(--ink);
+    outline:none;
+  }
+  input:focus{border-color:var(--gold);}
+  .input-prefix{
+    display:flex; align-items:stretch; border:1px solid var(--line); border-radius:10px; overflow:hidden;
+  }
+  .input-prefix span{
+    display:flex; align-items:center; padding:0 14px; background:var(--bg-light);
+    border-right:1px solid var(--line); font-size:13.5px; color:var(--ink-soft); flex:none;
+  }
+  .input-prefix input{border:none; border-radius:0;}
+  .form-grid-2{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media (max-width:640px){ .form-grid-2{grid-template-columns:1fr;} }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:12px 22px;
+    border-radius:var(--radius-lens); font-size:14px; font-weight:600; cursor:pointer;
+    border:1px solid transparent; text-decoration:none;
+  }
+  .btn-primary{background:var(--gold); color:#fff;}
+  .btn-primary:hover{opacity:.92;}
+  .btn-outline{background:none; border-color:var(--line); color:var(--ink);}
+  .btn-outline:hover{border-color:var(--ink);}
+  .btn-danger-outline{background:none; border-color:#EAC4BB; color:var(--danger);}
+  .btn-danger-outline:hover{background:#FBEAE6;}
+  .btn-row{display:flex; gap:12px; margin-top:24px; flex-wrap:wrap;}
+
+  .save-toast{
+    display:none; align-items:center; gap:8px; background:#EAF3EE; border:1px solid #BFD9CB;
+    color:var(--teal); padding:10px 16px; border-radius:10px; font-size:13.5px; margin-bottom:20px;
+    font-weight:600;
+  }
+  .save-toast.show{display:flex;}
+
+  .catalog-toolbar{
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    margin-bottom:20px;
+  }
+  .search-input{
+    flex:1; min-width:180px; padding:11px 14px; border:1px solid var(--line); border-radius:10px;
+    font-size:14px; background:var(--bg-light);
+  }
+  .filter-chip{
+    border:1px solid var(--line); background:var(--bg-light); padding:8px 15px;
+    border-radius:var(--radius-lens); font-size:13px; cursor:pointer; flex:none;
+  }
+  .filter-chip.active{background:var(--ink); color:#fff; border-color:var(--ink);}
+  .filter-row{display:flex; gap:8px; flex-wrap:wrap;}
+
+  .table-wrap{overflow-x:auto;}
+  table{width:100%; border-collapse:collapse; min-width:640px;}
+  thead th{
+    text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-soft); padding:0 12px 12px; border-bottom:1px solid var(--line);
+  }
+  tbody td{
+    padding:14px 12px; border-bottom:1px solid var(--line); font-size:14px; vertical-align:middle;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  .prod-cell{display:flex; align-items:center; gap:12px;}
+  .prod-thumb{
+    width:44px; height:44px; border-radius:10px; background:var(--bg-light);
+    border:1px solid var(--line); display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .prod-thumb .lens-icon{
+    width:60%; aspect-ratio:2.4/1; border:2px solid var(--line); border-radius:50%;
+  }
+  .prod-name{font-weight:600; font-size:14px;}
+  .prod-spec{font-size:12.5px; color:var(--ink-soft);}
+  .cat-badge{
+    display:inline-block; padding:4px 11px; border-radius:var(--radius-lens);
+    background:var(--bg-light); border:1px solid var(--line); font-size:12px; font-weight:600;
+  }
+  .stock-ok{color:var(--teal); font-weight:600; font-size:13px;}
+  .stock-low{color:var(--danger); font-weight:600; font-size:13px;}
+  .row-actions{display:flex; gap:8px;}
+  .icon-btn{
+    width:32px; height:32px; border-radius:8px; border:1px solid var(--line); background:var(--bg-panel);
+    cursor:pointer; font-size:13px; display:flex; align-items:center; justify-content:center;
+  }
+  .icon-btn:hover{border-color:var(--ink);}
+  .icon-btn.danger:hover{border-color:var(--danger); color:var(--danger);}
+
+  .add-form{
+    display:none; margin-top:24px; padding-top:24px; border-top:1px solid var(--line);
+  }
+  .add-form.show{display:block;}
+  .add-form-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;}
+  @media (max-width:720px){ .add-form-grid{grid-template-columns:1fr 1fr;} }
+  @media (max-width:480px){ .add-form-grid{grid-template-columns:1fr;} }
+  select{
+    width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:10px;
+    font-size:14.5px; font-family:inherit; background:var(--bg-light); color:var(--ink); outline:none;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="brand"><span class="brand-mark"></span> OS Kacamata</a>
+
+    <div>
+      <p class="side-label">Menu</p>
+      <nav class="side-nav">
+        <button class="side-link active" data-panel="data" type="button">
+          <span class="ic">1</span> Edit Data
+        </button>
+        <button class="side-link" data-panel="katalog" type="button">
+          <span class="ic">2</span> Edit Katalog
+        </button>
+      </nav>
+    </div>
+
+    <div class="side-foot">
+      <a href="index.html">← Lihat Website</a>
+      <a href="admin-login.html">Keluar</a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <button class="menu-btn" id="menuBtn" aria-label="Buka menu">☰</button>
+        <div class="topbar-title">
+          <h1 id="panelTitle">Edit Data</h1>
+          <p id="panelSub">Nomor WhatsApp &amp; tautan sosial media toko</p>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="admin-chip">
+          <div class="avatar">A</div>
+          <span>[Nama Admin]</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section class="panel active" id="panel-data">
+        <div class="save-toast" id="dataToast">Perubahan berhasil disimpan.</div>
+
+        <div class="card">
+          <h2>Kontak Toko</h2>
+          <p class="card-sub">Nomor ini digunakan pada tombol chat WhatsApp di seluruh halaman website.</p>
+          <form id="formKontak">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="waNumber">Nomor WhatsApp</label>
+                <div class="input-prefix">
+                  <span>+62</span>
+                  <input type="tel" id="waNumber" placeholder="81234567890" value="81234567890">
+                </div>
+                <p class="hint">Tanpa angka 0 di depan.</p>
+              </div>
+              <div class="form-group">
+                <label for="waMessage">Pesan Otomatis WhatsApp</label>
+                <input type="text" id="waMessage" placeholder="Halo OS Kacamata, saya ingin bertanya" value="Halo OS Kacamata, saya ingin bertanya">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="storeAddress">Alamat Toko</label>
+              <input type="text" id="storeAddress" placeholder="Jl. Contoh No. 10, Kota">
+            </div>
+            <div class="btn-row">
+              <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+              <button type="reset" class="btn btn-outline">Batalkan</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>Sosial Media</h2>
+          <p class="card-sub">Tautan ini tampil pada bagian Integrasi Sosial Media di halaman utama.</p>
+          <form id="formSosial">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="igUrl">Instagram</label>
+                <input type="url" id="igUrl" placeholder="https://instagram.com/username">
+              </div>
+              <div class="form-group">
+                <label for="ttUrl">TikTok</label>
+                <input type="url" id="ttUrl" placeholder="https://tiktok.com/@username">
+              </div>
+            </div>
+            <div class="btn-row">
+              <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+              <button type="reset" class="btn btn-outline">Batalkan</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-katalog">
+        <div class="save-toast" id="katalogToast">Perubahan katalog berhasil disimpan.</div>
+
+        <div class="card">
+          <div class="catalog-toolbar">
+            <input type="text" class="search-input" placeholder="Cari nama produk...">
+            <div class="filter-row">
+              <span class="filter-chip active" data-cat="semua">Semua</span>
+              <span class="filter-chip" data-cat="pria">Pria</span>
+              <span class="filter-chip" data-cat="wanita">Wanita</span>
+              <span class="filter-chip" data-cat="anak">Anak</span>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produk</th>
+                  <th>Kategori</th>
+                  <th>Harga</th>
+                  <th>Stok</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="productTableBody">
+                <tr data-cat="pria">
+                  <td>
+                    <div class="prod-cell">
+                      <div class="prod-thumb"><div class="lens-icon"></div></div>
+                      <div>
+                        <div class="prod-name">[Nama Produk Pria 1]</div>
+                        <div class="prod-spec">[Spesifikasi singkat]</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="cat-badge">Pria</span></td>
+                  <td>Rp0</td>
+                  <td><span class="stock-ok">Tersedia</span></td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="icon-btn" type="button" title="Edit">✎</button>
+                      <button class="icon-btn danger" type="button" title="Hapus">✕</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr data-cat="wanita">
+                  <td>
+                    <div class="prod-cell">
+                      <div class="prod-thumb"><div class="lens-icon"></div></div>
+                      <div>
+                        <div class="prod-name">[Nama Produk Wanita 1]</div>
+                        <div class="prod-spec">[Spesifikasi singkat]</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="cat-badge">Wanita</span></td>
+                  <td>Rp0</td>
+                  <td><span class="stock-ok">Tersedia</span></td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="icon-btn" type="button" title="Edit">✎</button>
+                      <button class="icon-btn danger" type="button" title="Hapus">✕</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr data-cat="anak">
+                  <td>
+                    <div class="prod-cell">
+                      <div class="prod-thumb"><div class="lens-icon"></div></div>
+                      <div>
+                        <div class="prod-name">[Nama Produk Anak 1]</div>
+                        <div class="prod-spec">[Spesifikasi singkat]</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="cat-badge">Anak</span></td>
+                  <td>Rp0</td>
+                  <td><span class="stock-low">Stok Menipis</span></td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="icon-btn" type="button" title="Edit">✎</button>
+                      <button class="icon-btn danger" type="button" title="Hapus">✕</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-primary" id="addProductBtn" type="button">+ Tambah Produk</button>
+          </div>
+
+          <form class="add-form" id="addProductForm">
+            <h2 style="font-size:15px; margin-bottom:16px;">Produk Baru</h2>
+            <div class="add-form-grid">
+              <div class="form-group">
+                <label for="newName">Nama Produk</label>
+                <input type="text" id="newName" placeholder="Nama produk">
+              </div>
+              <div class="form-group">
+                <label for="newCat">Kategori</label>
+                <select id="newCat">
+                  <option value="pria">Pria</option>
+                  <option value="wanita">Wanita</option>
+                  <option value="anak">Anak</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="newPrice">Harga</label>
+                <input type="text" id="newPrice" placeholder="Rp0">
+              </div>
+            </div>
+            <div class="btn-row">
+              <button type="submit" class="btn btn-primary">Simpan Produk</button>
+              <button type="button" class="btn btn-outline" id="cancelAddBtn">Batal</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const sideLinks = document.querySelectorAll('.side-link[data-panel]');
+  const panels = document.querySelectorAll('.panel');
+  const panelTitle = document.getElementById('panelTitle');
+  const panelSub = document.getElementById('panelSub');
+  const titles = {
+    data: ['Edit Data', 'Nomor WhatsApp & tautan sosial media toko'],
+    katalog: ['Edit Katalog', 'Kelola daftar produk yang tampil di website']
+  };
+
+  sideLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      sideLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      const target = link.dataset.panel;
+      panels.forEach(p => p.classList.toggle('active', p.id === 'panel-' + target));
+      panelTitle.textContent = titles[target][0];
+      panelSub.textContent = titles[target][1];
+      sidebar.classList.remove('open');
+    });
+  });
+
+  const sidebar = document.getElementById('sidebar');
+  const menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
+
+  function flashToast(el){
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+  }
+
+  document.getElementById('formKontak').addEventListener('submit', e => {
+    e.preventDefault();
+    flashToast(document.getElementById('dataToast'));
+  });
+  document.getElementById('formSosial').addEventListener('submit', e => {
+    e.preventDefault();
+    flashToast(document.getElementById('dataToast'));
+  });
+
+  const addBtn = document.getElementById('addProductBtn');
+  const addForm = document.getElementById('addProductForm');
+  const cancelAddBtn = document.getElementById('cancelAddBtn');
+  addBtn.addEventListener('click', () => addForm.classList.toggle('show'));
+  cancelAddBtn.addEventListener('click', () => addForm.classList.remove('show'));
+  addForm.addEventListener('submit', e => {
+    e.preventDefault();
+    addForm.classList.remove('show');
+    addForm.reset();
+    flashToast(document.getElementById('katalogToast'));
+  });
+
+  const catChips = document.querySelectorAll('.filter-chip[data-cat]');
+  const rows = document.querySelectorAll('#productTableBody tr');
+  catChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      catChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const cat = chip.dataset.cat;
+      rows.forEach(row => {
+        row.style.display = (cat === 'semua' || row.dataset.cat === cat) ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
