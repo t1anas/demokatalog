@@ -59,6 +59,7 @@
     .sidebar{
       position:fixed; inset:0 auto 0 0; width:260px; height:100vh;
       transform:translateX(-100%); transition:transform .25s ease; z-index:70;
+      overflow-y:auto;
     }
     .sidebar.open{transform:translateX(0);}
   }
@@ -154,6 +155,12 @@
     outline:none;
   }
   input:focus{border-color:var(--gold);}
+  textarea{
+    width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:10px;
+    font-size:13.5px; font-family:inherit; background:var(--bg-light); color:var(--ink);
+    outline:none; resize:vertical; min-height:90px;
+  }
+  textarea:focus{border-color:var(--gold);}
   .input-prefix{
     display:flex; align-items:stretch; border:1px solid var(--line); border-radius:10px; overflow:hidden;
   }
@@ -164,6 +171,22 @@
   .input-prefix input{border:none; border-radius:0;}
   .form-grid-2{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
   @media (max-width:640px){ .form-grid-2{grid-template-columns:1fr;} }
+
+  .checkbox-group{display:grid; gap:10px;}
+  .checkbox-row{display:flex; align-items:center; gap:10px; font-size:14px; color:var(--ink);}
+  .checkbox-row input{accent-color:var(--gold); width:16px; height:16px; flex:none;}
+  .checkbox-row.hidden{display:none;}
+  .promo-search{width:100%; margin-top:4px;}
+  .promo-product-box{
+    border:1px solid var(--line); border-radius:12px; margin-top:10px;
+    background:var(--bg-light); overflow:hidden;
+  }
+  .select-all-row{
+    padding:12px 14px; border-bottom:1px solid var(--line); font-weight:600; margin:0;
+  }
+  .promo-product-scroll{
+    max-height:170px; overflow-y:auto; padding:12px 14px;
+  }
 
   .btn{
     display:inline-flex; align-items:center; gap:8px; padding:12px 22px;
@@ -176,7 +199,7 @@
   .btn-outline:hover{border-color:var(--ink);}
   .btn-danger-outline{background:none; border-color:#EAC4BB; color:var(--danger);}
   .btn-danger-outline:hover{background:#FBEAE6;}
-  .btn-row{display:flex; gap:12px; margin-top:24px; flex-wrap:wrap;}
+  .btn-row{display:flex; gap:12px; margin-top:24px; flex-wrap:wrap; align-items:center;}
 
   .save-toast{
     display:none; align-items:center; gap:8px; background:#EAF3EE; border:1px solid #BFD9CB;
@@ -184,6 +207,12 @@
     font-weight:600;
   }
   .save-toast.show{display:flex;}
+  .error-toast{
+    display:none; align-items:center; gap:8px; background:#FBEAE6; border:1px solid #EAC4BB;
+    color:var(--danger); padding:10px 16px; border-radius:10px; font-size:13.5px; margin-bottom:20px;
+    font-weight:600;
+  }
+  .error-toast.show{display:flex;}
 
   .catalog-toolbar{
     display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
@@ -245,6 +274,29 @@
     width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:10px;
     font-size:14.5px; font-family:inherit; background:var(--bg-light); color:var(--ink); outline:none;
   }
+
+  .import-panel{
+    display:none; margin-top:24px; padding-top:24px; border-top:1px solid var(--line);
+  }
+  .import-panel.show{display:block;}
+  .import-dropzone{
+    border:1.5px dashed var(--line); border-radius:14px; padding:32px 20px;
+    text-align:center; cursor:pointer; background:var(--bg-light);
+  }
+  .import-dropzone:hover{border-color:var(--gold);}
+  .import-dropzone.dragover{border-color:var(--gold); background:var(--gold-soft);}
+  .import-dropzone p{margin-bottom:4px;}
+  .import-dropzone .import-sub{font-size:12.5px;}
+  .import-filename{
+    margin-top:14px; font-size:13.5px; font-weight:600; color:var(--ink); display:none;
+  }
+  .import-filename.show{display:block;}
+
+  .promo-badge{
+    display:inline-block; padding:4px 11px; border-radius:var(--radius-lens);
+    background:var(--gold-soft); color:var(--ink); font-size:12px; font-weight:600;
+  }
+  .promo-items{font-size:12.5px; color:var(--ink-soft);}
 </style>
 </head>
 <body>
@@ -261,6 +313,12 @@
         </button>
         <button class="side-link" data-panel="katalog" type="button">
           <span class="ic">2</span> Edit Katalog
+        </button>
+        <button class="side-link" data-panel="promo" type="button">
+          <span class="ic">3</span> Edit Promo
+        </button>
+        <button class="side-link" data-panel="lokasi" type="button">
+          <span class="ic">4</span> Edit Lokasi
         </button>
       </nav>
     </div>
@@ -335,6 +393,14 @@
                 <label for="ttUrl">TikTok</label>
                 <input type="url" id="ttUrl" placeholder="https://tiktok.com/@username">
               </div>
+              <div class="form-group">
+                <label for="fbUrl">Facebook</label>
+                <input type="url" id="fbUrl" placeholder="https://facebook.com/namahalaman">
+              </div>
+              <div class="form-group">
+                <label for="shopeeUrl">Shopee</label>
+                <input type="url" id="shopeeUrl" placeholder="https://shopee.co.id/namatoko">
+              </div>
             </div>
             <div class="btn-row">
               <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
@@ -346,6 +412,7 @@
 
       <section class="panel" id="panel-katalog">
         <div class="save-toast" id="katalogToast">Perubahan katalog berhasil disimpan.</div>
+        <div class="error-toast" id="importErrorToast">Gagal membaca file. Pastikan format CSV sesuai template.</div>
 
         <div class="card">
           <div class="catalog-toolbar">
@@ -436,6 +503,7 @@
 
           <div class="btn-row">
             <button class="btn btn-primary" id="addProductBtn" type="button">+ Tambah Produk</button>
+            <button class="btn btn-outline" id="importDataBtn" type="button">⭳ Import Data</button>
           </div>
 
           <form class="add-form" id="addProductForm">
@@ -463,6 +531,135 @@
               <button type="button" class="btn btn-outline" id="cancelAddBtn">Batal</button>
             </div>
           </form>
+
+          <div class="import-panel" id="importPanel">
+            <h2 style="font-size:15px; margin-bottom:6px;">Import Data Produk</h2>
+            <p class="card-sub" style="margin-bottom:16px;">Unggah file CSV dengan kolom: nama, kategori (pria/wanita/anak), harga, stok (tersedia/menipis).</p>
+            <div class="import-dropzone" id="importDropzone">
+              <p>Klik untuk pilih file atau seret file CSV ke sini</p>
+              <p class="import-sub">Format yang didukung: .csv</p>
+              <div class="import-filename" id="importFilename"></div>
+            </div>
+            <input type="file" id="importFileInput" accept=".csv" style="display:none">
+            <div class="btn-row">
+              <button type="button" class="btn btn-primary" id="importConfirmBtn">Proses Import</button>
+              <button type="button" class="btn btn-outline" id="cancelImportBtn">Batal</button>
+              <a href="data:text/csv;charset=utf-8,nama%2Ckategori%2Charga%2Cstok%0AContoh%20Produk%201%2Cpria%2CRp250000%2Ctersedia" download="template-import-produk.csv" class="btn btn-outline">Unduh Template</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-promo">
+        <div class="save-toast" id="promoToast">Promo berhasil disimpan.</div>
+
+        <div class="card">
+          <h2>Daftar Promo</h2>
+          <p class="card-sub">Promo aktif akan tampil pada banner promo di halaman utama.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama Promo</th>
+                  <th>Diskon</th>
+                  <th>Produk Terkait</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="promoTableBody">
+                <tr>
+                  <td class="prod-name">[Nama Promo 1]</td>
+                  <td><span class="promo-badge">0%</span></td>
+                  <td class="promo-items">[Nama Produk Pria 1], [Nama Produk Wanita 1]</td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="icon-btn" type="button" title="Edit">✎</button>
+                      <button class="icon-btn danger" type="button" title="Hapus">✕</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-primary" id="addPromoBtn" type="button">+ Tambah Promo</button>
+          </div>
+
+          <form class="add-form" id="addPromoForm">
+            <h2 style="font-size:15px; margin-bottom:16px;">Promo Baru</h2>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="promoName">Nama Promo</label>
+                <input type="text" id="promoName" placeholder="Diskon Akhir Tahun">
+              </div>
+              <div class="form-group">
+                <label for="promoTotal">Total Promo</label>
+                <input type="text" id="promoTotal" placeholder="mis. 20% atau Rp50.000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Barang yang Kena Promo</label>
+              <input type="text" class="search-input promo-search" id="promoProductSearch" placeholder="Cari nama produk...">
+              <div class="promo-product-box">
+                <label class="checkbox-row select-all-row">
+                  <input type="checkbox" id="promoSelectAll"> Pilih Semua
+                </label>
+                <div class="checkbox-group promo-product-scroll" id="promoProductList">
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Pria 1]"> [Nama Produk Pria 1]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Pria 2]"> [Nama Produk Pria 2]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Pria 3]"> [Nama Produk Pria 3]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Pria 4]"> [Nama Produk Pria 4]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Wanita 1]"> [Nama Produk Wanita 1]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Wanita 2]"> [Nama Produk Wanita 2]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Wanita 3]"> [Nama Produk Wanita 3]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Wanita 4]"> [Nama Produk Wanita 4]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Anak 1]"> [Nama Produk Anak 1]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Anak 2]"> [Nama Produk Anak 2]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Anak 3]"> [Nama Produk Anak 3]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Anak 4]"> [Nama Produk Anak 4]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Pria 5]"> [Nama Produk Pria 5]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Wanita 5]"> [Nama Produk Wanita 5]</label>
+                  <label class="checkbox-row"><input type="checkbox" value="[Nama Produk Anak 5]"> [Nama Produk Anak 5]</label>
+                </div>
+              </div>
+              <p class="hint">Bisa pilih lebih dari satu produk. Ketik untuk mencari, atau centang Pilih Semua.</p>
+            </div>
+            <div class="btn-row">
+              <button type="submit" class="btn btn-primary">Simpan Promo</button>
+              <button type="button" class="btn btn-outline" id="cancelAddPromoBtn">Batal</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-lokasi">
+        <div class="save-toast" id="lokasiToast">Lokasi berhasil disimpan.</div>
+
+        <div class="card">
+          <h2>Lokasi Toko</h2>
+          <p class="card-sub">Informasi ini tampil pada bagian Kontak &amp; Lokasi di halaman utama.</p>
+          <form id="formLokasi">
+            <div class="form-group">
+              <label for="lokasiAlamat">Alamat Lengkap</label>
+              <textarea id="lokasiAlamat" placeholder="Nama toko dan alamat lengkap">Optik Oskacamata Sultan Agung - Ponorogo
+Jl. Sultan Agung No.106, Sultanagung, Nologaten, Kec. Ponorogo, Kabupaten Ponorogo, Jawa Timur 63419</textarea>
+              </div>
+              <div class="form-group">
+                <label for="lokasiJam">Jam Operasional</label>
+                <input type="text" id="lokasiJam" placeholder="Senin–Sabtu, 09.00–20.00">
+              </div>
+              <div class="form-group">
+                <label for="lokasiMaps">Tautan Embed Google Maps</label>
+                <textarea id="lokasiMaps" placeholder="Tempel URL src dari kode embed Google Maps di sini"></textarea>
+                <p class="hint">Ambil dari Google Maps → Bagikan → Sematkan peta → salin URL pada atribut src.</p>
+              </div>
+            <div class="btn-row">
+              <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+              <button type="reset" class="btn btn-outline">Batalkan</button>
+            </div>
+          </form>
         </div>
       </section>
 
@@ -477,7 +674,9 @@
   const panelSub = document.getElementById('panelSub');
   const titles = {
     data: ['Edit Data', 'Nomor WhatsApp & tautan sosial media toko'],
-    katalog: ['Edit Katalog', 'Kelola daftar produk yang tampil di website']
+    katalog: ['Edit Katalog', 'Kelola daftar produk yang tampil di website'],
+    promo: ['Edit Promo', 'Kelola promo dan produk yang termasuk di dalamnya'],
+    lokasi: ['Edit Lokasi', 'Alamat, jam operasional, dan peta toko']
   };
 
   sideLinks.forEach(link => {
@@ -509,11 +708,20 @@
     e.preventDefault();
     flashToast(document.getElementById('dataToast'));
   });
+  document.getElementById('formLokasi').addEventListener('submit', e => {
+    e.preventDefault();
+    flashToast(document.getElementById('lokasiToast'));
+  });
 
   const addBtn = document.getElementById('addProductBtn');
   const addForm = document.getElementById('addProductForm');
   const cancelAddBtn = document.getElementById('cancelAddBtn');
-  addBtn.addEventListener('click', () => addForm.classList.toggle('show'));
+  const importPanel = document.getElementById('importPanel');
+
+  addBtn.addEventListener('click', () => {
+    importPanel.classList.remove('show');
+    addForm.classList.toggle('show');
+  });
   cancelAddBtn.addEventListener('click', () => addForm.classList.remove('show'));
   addForm.addEventListener('submit', e => {
     e.preventDefault();
@@ -523,16 +731,222 @@
   });
 
   const catChips = document.querySelectorAll('.filter-chip[data-cat]');
-  const rows = document.querySelectorAll('#productTableBody tr');
+  const productTableBody = document.getElementById('productTableBody');
+
+  function applyActiveFilter(){
+    const activeChip = document.querySelector('.filter-chip[data-cat].active');
+    const cat = activeChip ? activeChip.dataset.cat : 'semua';
+    document.querySelectorAll('#productTableBody tr').forEach(row => {
+      row.style.display = (cat === 'semua' || row.dataset.cat === cat) ? '' : 'none';
+    });
+  }
+
   catChips.forEach(chip => {
     chip.addEventListener('click', () => {
       catChips.forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
-      const cat = chip.dataset.cat;
-      rows.forEach(row => {
-        row.style.display = (cat === 'semua' || row.dataset.cat === cat) ? '' : 'none';
-      });
+      applyActiveFilter();
     });
+  });
+
+  const importDataBtn = document.getElementById('importDataBtn');
+  const importDropzone = document.getElementById('importDropzone');
+  const importFileInput = document.getElementById('importFileInput');
+  const importFilename = document.getElementById('importFilename');
+  const importConfirmBtn = document.getElementById('importConfirmBtn');
+  const cancelImportBtn = document.getElementById('cancelImportBtn');
+  const importErrorToast = document.getElementById('importErrorToast');
+
+  let pendingImportFile = null;
+
+  importDataBtn.addEventListener('click', () => {
+    addForm.classList.remove('show');
+    importPanel.classList.toggle('show');
+  });
+
+  importDropzone.addEventListener('click', () => importFileInput.click());
+  importDropzone.addEventListener('dragover', e => {
+    e.preventDefault();
+    importDropzone.classList.add('dragover');
+  });
+  importDropzone.addEventListener('dragleave', () => importDropzone.classList.remove('dragover'));
+  importDropzone.addEventListener('drop', e => {
+    e.preventDefault();
+    importDropzone.classList.remove('dragover');
+    if(e.dataTransfer.files.length){
+      pendingImportFile = e.dataTransfer.files[0];
+      showImportFilename();
+    }
+  });
+
+  importFileInput.addEventListener('change', () => {
+    if(importFileInput.files.length){
+      pendingImportFile = importFileInput.files[0];
+      showImportFilename();
+    }
+  });
+
+  function showImportFilename(){
+    importFilename.textContent = pendingImportFile.name;
+    importFilename.classList.add('show');
+  }
+
+  cancelImportBtn.addEventListener('click', () => {
+    importPanel.classList.remove('show');
+    resetImportState();
+  });
+
+  function resetImportState(){
+    pendingImportFile = null;
+    importFileInput.value = '';
+    importFilename.classList.remove('show');
+    importFilename.textContent = '';
+  }
+
+  function parseCSV(text){
+    const lines = text.trim().split(/\r?\n/);
+    lines.shift();
+    return lines
+      .filter(line => line.trim().length > 0)
+      .map(line => {
+        const cols = line.split(',').map(c => c.trim());
+        return {
+          nama: cols[0] || '',
+          kategori: (cols[1] || '').toLowerCase(),
+          harga: cols[2] || 'Rp0',
+          stok: (cols[3] || '').toLowerCase()
+        };
+      });
+  }
+
+  function buildProductRow(item){
+    const validCats = ['pria', 'wanita', 'anak'];
+    const kategori = validCats.includes(item.kategori) ? item.kategori : 'pria';
+    const kategoriLabel = kategori.charAt(0).toUpperCase() + kategori.slice(1);
+    const isLowStock = item.stok === 'menipis';
+    const stockClass = isLowStock ? 'stock-low' : 'stock-ok';
+    const stockLabel = isLowStock ? 'Stok Menipis' : 'Tersedia';
+
+    const row = document.createElement('tr');
+    row.dataset.cat = kategori;
+    row.innerHTML = `
+      <td>
+        <div class="prod-cell">
+          <div class="prod-thumb"><div class="lens-icon"></div></div>
+          <div>
+            <div class="prod-name">${item.nama || '[Tanpa Nama]'}</div>
+            <div class="prod-spec">Diimpor dari CSV</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="cat-badge">${kategoriLabel}</span></td>
+      <td>${item.harga}</td>
+      <td><span class="${stockClass}">${stockLabel}</span></td>
+      <td>
+        <div class="row-actions">
+          <button class="icon-btn" type="button" title="Edit">✎</button>
+          <button class="icon-btn danger" type="button" title="Hapus">✕</button>
+        </div>
+      </td>
+    `;
+    return row;
+  }
+
+  importConfirmBtn.addEventListener('click', () => {
+    if(!pendingImportFile){
+      flashToast(importErrorToast);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      try{
+        const items = parseCSV(e.target.result);
+        if(items.length === 0) throw new Error('empty');
+        items.forEach(item => productTableBody.appendChild(buildProductRow(item)));
+        applyActiveFilter();
+        importPanel.classList.remove('show');
+        resetImportState();
+        flashToast(document.getElementById('katalogToast'));
+      }catch(err){
+        flashToast(importErrorToast);
+      }
+    };
+    reader.onerror = () => flashToast(importErrorToast);
+    reader.readAsText(pendingImportFile);
+  });
+
+  const addPromoBtn = document.getElementById('addPromoBtn');
+  const addPromoForm = document.getElementById('addPromoForm');
+  const cancelAddPromoBtn = document.getElementById('cancelAddPromoBtn');
+  const promoTableBody = document.getElementById('promoTableBody');
+
+  addPromoBtn.addEventListener('click', () => addPromoForm.classList.toggle('show'));
+  cancelAddPromoBtn.addEventListener('click', () => {
+    addPromoForm.classList.remove('show');
+    addPromoForm.reset();
+    resetPromoProductPicker();
+  });
+
+  const promoProductSearch = document.getElementById('promoProductSearch');
+  const promoSelectAll = document.getElementById('promoSelectAll');
+  const promoProductList = document.getElementById('promoProductList');
+  const promoProductRows = document.querySelectorAll('#promoProductList .checkbox-row');
+  const promoProductCheckboxes = document.querySelectorAll('#promoProductList input[type="checkbox"]');
+
+  promoProductSearch.addEventListener('input', () => {
+    const query = promoProductSearch.value.trim().toLowerCase();
+    promoProductRows.forEach(row => {
+      const label = row.textContent.trim().toLowerCase();
+      row.classList.toggle('hidden', query.length > 0 && !label.includes(query));
+    });
+  });
+
+  promoSelectAll.addEventListener('change', () => {
+    promoProductRows.forEach(row => {
+      if(!row.classList.contains('hidden')){
+        row.querySelector('input[type="checkbox"]').checked = promoSelectAll.checked;
+      }
+    });
+  });
+
+  promoProductCheckboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      const allChecked = Array.from(promoProductCheckboxes).every(c => c.checked);
+      promoSelectAll.checked = allChecked;
+    });
+  });
+
+  function resetPromoProductPicker(){
+    promoProductSearch.value = '';
+    promoSelectAll.checked = false;
+    promoProductRows.forEach(row => row.classList.remove('hidden'));
+  }
+
+  addPromoForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const promoName = document.getElementById('promoName').value || '[Tanpa Nama Promo]';
+    const promoTotal = document.getElementById('promoTotal').value || '0%';
+    const selectedItems = Array.from(document.querySelectorAll('#promoProductList input:checked')).map(i => i.value);
+    const itemsLabel = selectedItems.length ? selectedItems.join(', ') : 'Belum ada produk dipilih';
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td class="prod-name">${promoName}</td>
+      <td><span class="promo-badge">${promoTotal}</span></td>
+      <td class="promo-items">${itemsLabel}</td>
+      <td>
+        <div class="row-actions">
+          <button class="icon-btn" type="button" title="Edit">✎</button>
+          <button class="icon-btn danger" type="button" title="Hapus">✕</button>
+        </div>
+      </td>
+    `;
+    promoTableBody.appendChild(row);
+
+    addPromoForm.classList.remove('show');
+    addPromoForm.reset();
+    resetPromoProductPicker();
+    flashToast(document.getElementById('promoToast'));
   });
 </script>
 

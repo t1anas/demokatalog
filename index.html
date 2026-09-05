@@ -232,6 +232,14 @@
 
   .kontak-grid{display:grid; grid-template-columns:.9fr 1.1fr; gap:48px;}
   @media (max-width:900px){ .kontak-grid{grid-template-columns:1fr; gap:28px;} }
+  .branch-tabs{display:flex; gap:10px; margin-bottom:32px; flex-wrap:wrap;}
+  .branch-tab{
+    border:1px solid var(--line); background:var(--bg-panel); padding:9px 18px;
+    border-radius:var(--radius-lens); font-size:13.5px; cursor:pointer; font-family:inherit;
+  }
+  .branch-tab.active{background:var(--ink); color:#fff; border-color:var(--ink);}
+  .branch-panel{display:none;}
+  .branch-panel.active{display:block;}
   .info-block{display:grid; gap:22px;}
   .info-row{display:flex; gap:14px;}
   .info-icon{
@@ -462,34 +470,73 @@
       <h2>Kunjungi atau hubungi kami</h2>
     </div>
 
-    <div class="kontak-grid">
-      <div class="info-block">
-        <div class="info-row">
-          <div class="info-icon">📍</div>
-          <div>
-            <h3>Alamat</h3>
-            <p>[Optik Oskacamata Sultan Agung - Ponorogo
+    <div class="branch-tabs" id="branchTabs">
+      <span class="branch-tab active" data-branch="1">Cabang Sultan Agung</span>
+      <span class="branch-tab" data-branch="2">Cabang Suromenggolo</span>
+    </div>
+
+    <div class="branch-panel active" id="branch-1">
+      <div class="kontak-grid">
+        <div class="info-block">
+          <div class="info-row">
+            <div class="info-icon">📍</div>
+            <div>
+              <h3>Alamat</h3>
+              <p>[Optik Oskacamata Sultan Agung - Ponorogo
 Jl. Sultan Agung No.106, Sultanagung, Nologaten, Kec. Ponorogo, Kabupaten Ponorogo, Jawa Timur 63419]</p>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon">💬</div>
+            <div>
+              <h3>WhatsApp</h3>
+              <p><a href="https://wa.me/6281234567890" target="_blank" rel="noopener">[0823444555688]</a></p>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon">🕒</div>
+            <div>
+              <h3>Jam Operasional</h3>
+              <p>[Senin–Sabtu, 09.00–20.00]</p>
+            </div>
           </div>
         </div>
-        <div class="info-row">
-          <div class="info-icon">💬</div>
-          <div>
-            <h3>WhatsApp</h3>
-            <p><a href="https://wa.me/6281234567890" target="_blank" rel="noopener">[0823444555688]</a></p>
-          </div>
-        </div>
-        <div class="info-row">
-          <div class="info-icon">🕒</div>
-          <div>
-            <h3>Jam Operasional</h3>
-            <p>[Senin–Sabtu, 09.00–20.00]</p>
-          </div>
+
+        <div class="map-frame">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3257.5676167211636!2d111.4751921!3d-7.862628899999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e799f003410b929%3A0x83a86f4ea367fb72!2sOptik%20Oskacamata%20Sultan%20Agung%20-%20Ponorogo!5e1!3m2!1sid!2sid!4v1788495926273!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
       </div>
+    </div>
 
-      <div class="map-frame">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3257.5676167211636!2d111.4751921!3d-7.862628899999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e799f003410b929%3A0x83a86f4ea367fb72!2sOptik%20Oskacamata%20Sultan%20Agung%20-%20Ponorogo!5e1!3m2!1sid!2sid!4v1788495926273!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <div class="branch-panel" id="branch-2">
+      <div class="kontak-grid">
+        <div class="info-block">
+          <div class="info-row">
+            <div class="info-icon">📍</div>
+            <div>
+              <h3>Alamat</h3>
+              <p>Optik Oskacamata Suromenggolo-Ponorogo
+Jl. Suromenggolo, Sultanagung, Nologaten, Kec. Ponorogo, Kabupaten Ponorogo, Jawa Timur 63411</p>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon">💬</div>
+            <div>
+              <h3>WhatsApp</h3>
+              <p><a href="https://wa.me/6281234567890" target="_blank" rel="noopener">[0823444555688]</a></p>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon">🕒</div>
+            <div>
+              <h3>Jam Operasional</h3>
+              <p>09.00–20.00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-frame">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3257.5457487244803!2d111.478195!3d-7.865413599999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e79a02a4b3ec19b%3A0xac3365e30a5a1cf4!2sOptik%20Oskacamata%20Suromenggolo-Ponorogo!5e1!3m2!1sid!2sid!4v1788612423103!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>        </div>
       </div>
     </div>
   </div>
@@ -514,6 +561,20 @@ Jl. Sultan Agung No.106, Sultanagung, Nologaten, Kec. Ponorogo, Kabupaten Ponoro
         <div>
           <h3>TikTok</h3>
           <p>[@username TikTok toko]</p>
+        </div>
+      </a>
+      <a class="sosial-card" href="https://facebook.com/" target="_blank" rel="noopener">
+        <div class="sosial-mark">FB</div>
+        <div>
+          <h3>Facebook</h3>
+          <p>[nama halaman Facebook toko]</p>
+        </div>
+      </a>
+      <a class="sosial-card" href="https://shopee.co.id/" target="_blank" rel="noopener">
+        <div class="sosial-mark">SP</div>
+        <div>
+          <h3>Shopee</h3>
+          <p>[nama toko Shopee]</p>
         </div>
       </a>
     </div>
@@ -564,6 +625,16 @@ Jl. Sultan Agung No.106, Sultanagung, Nologaten, Kec. Ponorogo, Kabupaten Ponoro
     chip.addEventListener('click', () => {
       document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
+    });
+  });
+
+  const branchTabs = document.querySelectorAll('.branch-tab');
+  const branchPanels = document.querySelectorAll('.branch-panel');
+  branchTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      branchTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      branchPanels.forEach(p => p.classList.toggle('active', p.id === 'branch-' + tab.dataset.branch));
     });
   });
 </script>
