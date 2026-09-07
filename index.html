@@ -192,9 +192,17 @@
   .product-thumb{
     aspect-ratio:1/1; background:var(--bg-light); display:flex; align-items:center;
     justify-content:center; color:var(--ink-soft); font-size:13px; position:relative;
+    overflow:hidden;
   }
   .product-thumb .lens-icon{
     width:56%; aspect-ratio:2.4/1; border:3px solid var(--line); border-radius:50%; position:relative;
+  }
+  .product-thumb img{
+    width:100%; height:100%; object-fit:cover; object-position:center; display:block;
+  }
+  .category-tag{
+    position:absolute; top:12px; left:12px; background:#fff; border:1px solid var(--line);
+    border-radius:var(--radius-lens); padding:4px 10px; font-size:11px; font-weight:600; color:var(--ink);
   }
   .product-body{padding:18px 18px 22px;}
   .product-body h3{font-size:15.5px; margin-bottom:4px;}
@@ -322,8 +330,7 @@
         </div>
       </div>
       <div class="hero-visual">
-        <div class="lens-frame"></div>
-        <div class="placeholder-label">[foto/banner utama toko]</div>
+        <img src="images/hero-banner.jpg" alt="OS Kacamata">
       </div>
     </div>
 
@@ -340,7 +347,7 @@
 <section id="profil">
   <div class="wrap">
     <div class="profil-grid">
-      <div class="profil-photo">[foto toko]</div>
+      <div class="profil-photo"><img src="images/look1.png" alt="Toko OS Kacamata"></div>
       <div>
         <div class="eyebrow">PROFIL TOKO</div>
         <h2>Tentang OS Kacamata</h2>
@@ -385,43 +392,42 @@
     </div>
 
     <div class="filter-row">
-      <span class="filter-chip active">Semua</span>
-      <span class="filter-chip">Kacamata Baca</span>
-      <span class="filter-chip">Kacamata Minus</span>
-      <span class="filter-chip">Kacamata Hitam</span>
-      <span class="filter-chip">Lensa Kontak</span>
+      <span class="filter-chip active" data-filter="semua">Semua</span>
+      <span class="filter-chip" data-filter="pria">Pria</span>
+      <span class="filter-chip" data-filter="wanita">Wanita</span>
+      <span class="filter-chip" data-filter="anak">Anak</span>
     </div>
 
     <div class="product-grid">
-      <div class="product-card">
-        <div class="product-thumb"><div class="lens-icon"></div></div>
+      <div class="product-card" data-category="pria">
+        <div class="product-thumb"><img src="images/pria1.jpeg" alt="[Nama Produk Pria 1]"><span class="category-tag">Pria</span></div>
         <div class="product-body">
-          <h3>[Nama Produk 1]</h3>
-          <p style="font-size:13px; margin:0;">[Spesifikasi singkat: bahan, ukuran, tipe lensa]</p>
+          <h3>[Nama Produk Pria 1]</h3>
+          <p style="font-size:13px; margin:0;">[Spesifikasi singkat produk]</p>
           <div class="product-meta">
-            <span class="price">Rp0</span>
+            <span class="price">Rp200.000</span>
             <span class="stock-tag">Tersedia</span>
           </div>
         </div>
       </div>
-      <div class="product-card">
-        <div class="product-thumb"><div class="lens-icon"></div></div>
+      <div class="product-card" data-category="wanita">
+        <div class="product-thumb"><img src="images/wanita1.jpeg" alt="[Nama Produk Wanita 1]"><span class="category-tag">Wanita</span></div>
         <div class="product-body">
-          <h3>[Nama Produk 2]</h3>
-          <p style="font-size:13px; margin:0;">[Spesifikasi singkat: bahan, ukuran, tipe lensa]</p>
+          <h3>[Nama Produk Wanita 1]</h3>
+          <p style="font-size:13px; margin:0;">[Spesifikasi singkat produk]</p>
           <div class="product-meta">
-            <span class="price">Rp0</span>
+            <span class="price">Rp200.000</span>
             <span class="stock-tag">Tersedia</span>
           </div>
         </div>
       </div>
-      <div class="product-card">
-        <div class="product-thumb"><div class="lens-icon"></div></div>
+      <div class="product-card" data-category="anak">
+        <div class="product-thumb"><img src="images/anak23467.jpeg" alt="[Nama Produk Anak 1]"><span class="category-tag">Anak</span></div>
         <div class="product-body">
-          <h3>[Nama Produk 3]</h3>
-          <p style="font-size:13px; margin:0;">[Spesifikasi singkat: bahan, ukuran, tipe lensa]</p>
+          <h3>[Nama Produk Anak 1]</h3>
+          <p style="font-size:13px; margin:0;">[Spesifikasi singkat produk]</p>
           <div class="product-meta">
-            <span class="price">Rp0</span>
+            <span class="price">Rp200.000</span>
             <span class="stock-tag">Tersedia</span>
           </div>
         </div>
@@ -621,10 +627,17 @@ Jl. Suromenggolo, Sultanagung, Nologaten, Kec. Ponorogo, Kabupaten Ponorogo, Jaw
   menuBtn.addEventListener('click', () => navLinks.classList.toggle('open'));
   navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
 
-  document.querySelectorAll('.filter-chip').forEach(chip => {
+  const filterChips = document.querySelectorAll('#katalog .filter-chip');
+  const previewCards = document.querySelectorAll('#katalog .product-card');
+  filterChips.forEach(chip => {
     chip.addEventListener('click', () => {
-      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      filterChips.forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
+      const filter = chip.dataset.filter;
+      previewCards.forEach(card => {
+        const match = filter === 'semua' || card.dataset.category === filter;
+        card.style.display = match ? '' : 'none';
+      });
     });
   });
 

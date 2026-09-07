@@ -124,15 +124,101 @@
   @media (max-width:560px){ .product-grid{grid-template-columns:1fr; padding-bottom:64px;} }
   .product-card{
     background:var(--bg-panel); border:1px solid var(--line); border-radius:18px;
-    overflow:hidden; transition:opacity .2s ease;
+    overflow:hidden; transition:opacity .2s ease, transform .15s ease; cursor:pointer;
   }
+  .product-card:hover{transform:translateY(-3px);}
   .product-card.hidden{display:none;}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:13px 22px; border-radius:var(--radius-lens); font-size:14.5px; font-weight:600;
+    cursor:pointer; border:1px solid transparent; text-decoration:none; font-family:inherit;
+  }
+  .btn-primary{background:var(--gold); color:#fff;}
+  .btn-primary:hover{opacity:.92;}
+  .btn-outline{background:none; border-color:var(--line); color:var(--ink);}
+  .btn-outline:hover{border-color:var(--ink);}
+  .btn-block{width:100%;}
+
+  .product-card.active{border-color:var(--gold);}
+
+  .detail-panel{
+    grid-column:1 / -1;
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:18px;
+    overflow:hidden; position:relative;
+  }
+  .detail-close{
+    position:absolute; top:16px; right:16px; width:34px; height:34px; border-radius:50%;
+    border:1px solid var(--line); background:var(--bg-panel); cursor:pointer; font-size:14px;
+    display:flex; align-items:center; justify-content:center; z-index:2;
+  }
+  .detail-content{display:grid; grid-template-columns:1fr 1fr;}
+  @media (max-width:720px){ .detail-content{grid-template-columns:1fr;} }
+  .detail-thumb{
+    aspect-ratio:6/7; background:var(--bg-light); display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  @media (max-width:720px){ .detail-thumb{aspect-ratio:4/3;} }
+  .detail-thumb .lens-icon{width:44%; aspect-ratio:2.4/1; border:4px solid var(--line); border-radius:50%;}
+  .detail-info{padding:32px;}
+  @media (max-width:560px){ .detail-info{padding:22px;} }
+  .detail-info .category-tag{position:static; display:inline-block; margin-bottom:12px;}
+  .detail-info h2{font-size:23px; margin-bottom:10px;}
+  .detail-price{font-family:'Fraunces',serif; font-size:23px; color:var(--ink); margin-bottom:14px;}
+  .detail-spec{font-size:14px; margin-bottom:18px;}
+  .detail-stock{margin-bottom:18px;}
+  .detail-tags-row{margin-bottom:14px;}
+  .tags-label{display:block; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:8px;}
+  .tag-pill{
+    display:inline-block; padding:5px 12px; border-radius:var(--radius-lens);
+    background:var(--bg-light); border:1px solid var(--line); font-size:12px; color:var(--ink);
+    margin:0 6px 6px 0;
+  }
+  .lensSelect{
+    width:100%; padding:11px 14px; border:1px solid var(--line); border-radius:10px;
+    font-size:14px; font-family:inherit; background:var(--bg-light); color:var(--ink); outline:none;
+  }
+  .lensSelect:focus{border-color:var(--gold);}
+  .qty-row{margin-bottom:22px;}
+  .qty-row label{display:block; font-size:13px; font-weight:600; margin-bottom:8px;}
+  .qty-stepper{
+    display:inline-flex; align-items:center; border:1px solid var(--line); border-radius:var(--radius-lens);
+    overflow:hidden;
+  }
+  .qty-stepper button{
+    width:38px; height:38px; border:none; background:var(--bg-light); cursor:pointer; font-size:16px;
+    display:flex; align-items:center; justify-content:center; font-family:inherit;
+  }
+  .qty-stepper input{
+    width:46px; border:none; text-align:center; font-size:14.5px; font-family:inherit;
+    background:var(--bg-panel); padding:8px 0; outline:none;
+  }
+  .related-section{padding:28px 32px 32px; border-top:1px solid var(--line);}
+  @media (max-width:560px){ .related-section{padding:22px;} }
+  .related-section h3{font-size:15px; margin-bottom:16px;}
+  .related-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  @media (max-width:720px){ .related-grid{grid-template-columns:repeat(2,1fr);} }
+  .related-card{
+    border:1px solid var(--line); border-radius:14px; overflow:hidden; cursor:pointer; background:var(--bg-panel);
+  }
+  .related-thumb{
+    aspect-ratio:1/1; background:var(--bg-light); display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .related-thumb .lens-icon{width:56%; aspect-ratio:2.4/1; border:2px solid var(--line); border-radius:50%;}
+  .related-body{padding:10px 12px 14px;}
+  .related-body .name{font-size:12.5px; font-weight:600; display:block; margin-bottom:2px;}
+  .related-body .price{font-family:'Fraunces',serif; font-size:13.5px;}
   .product-thumb{
     aspect-ratio:1/1; background:var(--bg-light); display:flex; align-items:center;
     justify-content:center; color:var(--ink-soft); font-size:13px; position:relative;
+    overflow:hidden;
   }
   .product-thumb .lens-icon{
     width:56%; aspect-ratio:2.4/1; border:3px solid var(--line); border-radius:50%; position:relative;
+  }
+  .product-thumb img, .detail-thumb img, .related-thumb img{
+    width:100%; height:100%; object-fit:cover; object-position:center; display:block;
   }
   .category-tag{
     position:absolute; top:12px; left:12px; background:#fff; border:1px solid var(--line);
@@ -180,7 +266,7 @@
     <nav class="links" id="navLinks">
       <a href="index.html#beranda">Beranda</a>
       <a href="index.html#profil">Profil Toko</a>
-      <a href="katalog.html#katalog">Katalog</a>
+      <a href="katalog.html">Katalog</a>
       <a href="index.html#galeri">Galeri</a>
       <a href="index.html#kontak">Kontak</a>
       <a href="index.html#sosial">Sosial Media</a>
@@ -194,7 +280,7 @@
   <div class="wrap">
     <div class="eyebrow">KATALOG LENGKAP</div>
     <h1>Semua Produk OS Kacamata</h1>
-    <p>[deskripsi singkat katalog lengkap.]</p>
+    <p>[Ganti dengan deskripsi singkat katalog lengkap.]</p>
   </div>
 </section>
 
@@ -212,100 +298,100 @@
 
     <div class="product-grid" id="productGrid">
       <div class="product-card" data-category="pria">
-        <div class="product-thumb"><div class="lens-icon"></div><span class="category-tag">Pria</span></div>
+        <div class="product-thumb"><img src="images/pria1.jpeg" alt="[Nama Produk Pria 1]"><span class="category-tag">Pria</span></div>
         <div class="product-body">
           <h3>[Nama Produk Pria 1]</h3>
           <p style="font-size:13px; margin:0;">[Spesifikasi singkat produk]</p>
           <div class="product-meta">
-            <span class="price">Rp0</span>
+            <span class="price">Rp200.000</span>
             <span class="stock-tag">Tersedia</span>
           </div>
         </div>
       </div>
       <div class="product-card" data-category="pria">
-        <div class="product-thumb"><div class="lens-icon"></div><span class="category-tag">Pria</span></div>
+        <div class="product-thumb"><img src="images/pria2.jpeg" alt="[Nama Produk Pria 2]"><span class="category-tag">Pria</span></div>
         <div class="product-body">
           <h3>[Nama Produk Pria 2]</h3>
           <p style="font-size:13px; margin:0;">[Spesifikasi singkat produk]</p>
           <div class="product-meta">
-            <span class="price">Rp0</span>
+            <span class="price">Rp150.000</span>
             <span class="stock-tag">Tersedia</span>
           </div>
         </div>
       </div>
       <div class="product-card" data-category="pria">
-        <div class="product-thumb"><div class="lens-icon"></div><span class="category-tag">Pria</span></div>
+        <div class="product-thumb"><img src="images/pria3.jpeg" alt="[Nama Produk Pria 3]"><span class="category-tag">Pria</span></div>
         <div class="product-body">
           <h3>[Nama Produk Pria 3]</h3>
           <p style="font-size:13px; margin:0;">[Spesifikasi singkat produk]</p>
           <div class="product-meta">
-            <span class="price">Rp0</span>
+            <span class="price">Rp200.000</span>
             <span class="stock-tag">Tersedia</span>
           </div>
         </div>
       </div>
       <div class="product-card" data-category="wanita">
-        <div class="product-thumb"><div class="lens-icon"></div><span class="category-tag">Wanita</span></div>
+        <div class="product-thumb"><img src="images/wanita1.jpeg" alt="[Nama Produk Wanita 1]"><span class="category-tag">Wanita</span></div>
         <div class="product-body">
           <h3>[Nama Produk Wanita 1]</h3>
           <p style="font-size:13px; margin:0;">[Spesifikasi singkat produk]</p>
           <div class="product-meta">
-            <span class="price">Rp0</span>
+            <span class="price">Rp200.000</span>
             <span class="stock-tag">Tersedia</span>
           </div>
         </div>
       </div>
       <div class="product-card" data-category="wanita">
-        <div class="product-thumb"><div class="lens-icon"></div><span class="category-tag">Wanita</span></div>
+        <div class="product-thumb"><img src="images/wanita2.jpeg" alt="[Nama Produk Wanita 2]"><span class="category-tag">Wanita</span></div>
         <div class="product-body">
           <h3>[Nama Produk Wanita 2]</h3>
           <p style="font-size:13px; margin:0;">[Spesifikasi singkat produk]</p>
           <div class="product-meta">
-            <span class="price">Rp0</span>
+            <span class="price">Rp150.000</span>
             <span class="stock-tag">Tersedia</span>
           </div>
         </div>
       </div>
       <div class="product-card" data-category="wanita">
-        <div class="product-thumb"><div class="lens-icon"></div><span class="category-tag">Wanita</span></div>
+        <div class="product-thumb"><img src="images/wanita3.jpg" alt="[Nama Produk Wanita 3]"><span class="category-tag">Wanita</span></div>
         <div class="product-body">
           <h3>[Nama Produk Wanita 3]</h3>
           <p style="font-size:13px; margin:0;">[Spesifikasi singkat produk]</p>
           <div class="product-meta">
-            <span class="price">Rp0</span>
+            <span class="price">Rp250.000</span>
             <span class="stock-tag">Tersedia</span>
           </div>
         </div>
       </div>
       <div class="product-card" data-category="anak">
-        <div class="product-thumb"><div class="lens-icon"></div><span class="category-tag">Anak</span></div>
+        <div class="product-thumb"><img src="images/anak23467.jpeg" alt="[Nama Produk Anak 1]"><span class="category-tag">Anak</span></div>
         <div class="product-body">
           <h3>[Nama Produk Anak 1]</h3>
           <p style="font-size:13px; margin:0;">[Spesifikasi singkat produk]</p>
           <div class="product-meta">
-            <span class="price">Rp0</span>
+            <span class="price">Rp200.000</span>
             <span class="stock-tag">Tersedia</span>
           </div>
         </div>
       </div>
       <div class="product-card" data-category="anak">
-        <div class="product-thumb"><div class="lens-icon"></div><span class="category-tag">Anak</span></div>
+        <div class="product-thumb"><img src="images/anak123.png" alt="[Nama Produk Anak 2]"><span class="category-tag">Anak</span></div>
         <div class="product-body">
           <h3>[Nama Produk Anak 2]</h3>
           <p style="font-size:13px; margin:0;">[Spesifikasi singkat produk]</p>
           <div class="product-meta">
-            <span class="price">Rp0</span>
+            <span class="price">Rp150.000</span>
             <span class="stock-tag">Tersedia</span>
           </div>
         </div>
       </div>
       <div class="product-card" data-category="anak">
-        <div class="product-thumb"><div class="lens-icon"></div><span class="category-tag">Anak</span></div>
+        <div class="product-thumb"><img src="images/anak89764.jpeg" alt="[Nama Produk Anak 3]"><span class="category-tag">Anak</span></div>
         <div class="product-body">
           <h3>[Nama Produk Anak 3]</h3>
           <p style="font-size:13px; margin:0;">[Spesifikasi singkat produk]</p>
           <div class="product-meta">
-            <span class="price">Rp0</span>
+            <span class="price">Rp250.000</span>
             <span class="stock-tag">Tersedia</span>
           </div>
         </div>
@@ -321,7 +407,7 @@
     <div class="footer-grid">
       <div>
         <a href="index.html" class="brand"><span class="brand-mark"></span> OS Kacamata</a>
-        <p style="margin-top:14px; font-size:13.5px; max-width:32ch;">[deskripsi singkat toko untuk footer.]</p>
+        <p style="margin-top:14px; font-size:13.5px; max-width:32ch;">[Ganti dengan deskripsi singkat toko untuk footer.]</p>
       </div>
       <div>
         <h4>Navigasi</h4>
@@ -381,6 +467,155 @@
   });
 
   applyFilter('semua');
+
+  const productGrid = document.getElementById('productGrid');
+  let openCard = null;
+  let openPanel = null;
+
+  function parseRupiah(str){
+    return parseInt(String(str).replace(/[^0-9-]/g, ''), 10) || 0;
+  }
+  function formatRupiah(num){
+    return 'Rp' + num.toLocaleString('id-ID');
+  }
+
+  function buildDetailPanel(card){
+    const name = card.querySelector('h3').textContent;
+    const spec = card.querySelector('.product-body p').textContent;
+    const price = card.querySelector('.price').textContent;
+    const basePrice = parseRupiah(price);
+    const stockEl = card.querySelector('.stock-tag');
+    const category = card.dataset.category;
+    const categoryLabel = category.charAt(0).toUpperCase() + category.slice(1);
+    const thumbClone = card.querySelector('.product-thumb').cloneNode(true);
+    const thumbTagEl = thumbClone.querySelector('.category-tag');
+    if(thumbTagEl) thumbTagEl.remove();
+    const thumbHtml = thumbClone.innerHTML;
+
+    const panel = document.createElement('div');
+    panel.className = 'detail-panel';
+    panel.innerHTML = `
+      <button class="detail-close" type="button" aria-label="Tutup">✕</button>
+      <div class="detail-content">
+        <div class="detail-thumb">${thumbHtml}</div>
+        <div class="detail-info">
+          <span class="category-tag">${categoryLabel}</span>
+          <h2>${name}</h2>
+          <div class="detail-price">${price}</div>
+          <p class="detail-spec">${spec}</p>
+          <div class="detail-stock"><span class="${stockEl.className}">${stockEl.textContent}</span></div>
+          <div class="detail-tags-row">
+            <span class="tags-label">Jenis Lensa</span>
+            <select class="lensSelect">
+              <option value="Normal" data-extra="0">Normal (+Rp0)</option>
+              <option value="Blue Chromic" data-extra="150000">Blue Chromic (+Rp150.000)</option>
+              <option value="Photochromic" data-extra="300000">Photochromic (+Rp300.000)</option>
+            </select>
+          </div>
+          <div class="detail-tags-row">
+            <span class="tags-label">Jenis Tambahan Tersedia</span>
+            <span class="tag-pill">Nightdrive (+Rp100.000)</span><span class="tag-pill">Anti Embun (+Rp50.000)</span>
+          </div>
+          <div class="qty-row">
+            <label>Jumlah</label>
+            <div class="qty-stepper">
+              <button type="button" class="qtyMinus">−</button>
+              <input type="number" class="qtyInput" value="1" min="1">
+              <button type="button" class="qtyPlus">+</button>
+            </div>
+          </div>
+          <a href="#" class="btn btn-primary btn-block orderBtn">Pesan Sekarang</a>
+        </div>
+      </div>
+      <div class="related-section">
+        <h3>Produk Terkait</h3>
+        <div class="related-grid"></div>
+      </div>
+    `;
+
+    const qtyInput = panel.querySelector('.qtyInput');
+    const orderBtn = panel.querySelector('.orderBtn');
+    const lensSelect = panel.querySelector('.lensSelect');
+    const priceEl = panel.querySelector('.detail-price');
+
+    function updateOrderLink(){
+      const lensExtra = parseInt(lensSelect.selectedOptions[0].dataset.extra, 10) || 0;
+      priceEl.textContent = formatRupiah(basePrice + lensExtra);
+
+      orderBtn.href = 'pesan.html?produk=' + encodeURIComponent(name) +
+        '&kategori=' + encodeURIComponent(category) +
+        '&harga=' + encodeURIComponent(price) +
+        '&jumlah=' + encodeURIComponent(qtyInput.value) +
+        '&lensa=' + encodeURIComponent(lensSelect.value);
+    }
+    updateOrderLink();
+
+    lensSelect.addEventListener('change', updateOrderLink);
+
+    panel.querySelector('.qtyMinus').addEventListener('click', () => {
+      qtyInput.value = Math.max(1, parseInt(qtyInput.value || '1', 10) - 1);
+      updateOrderLink();
+    });
+    panel.querySelector('.qtyPlus').addEventListener('click', () => {
+      qtyInput.value = parseInt(qtyInput.value || '1', 10) + 1;
+      updateOrderLink();
+    });
+    qtyInput.addEventListener('change', () => {
+      qtyInput.value = Math.max(1, parseInt(qtyInput.value || '1', 10));
+      updateOrderLink();
+    });
+
+    const relatedGrid = panel.querySelector('.related-grid');
+    Array.from(cards)
+      .filter(c => c !== card && c.dataset.category === category)
+      .slice(0, 4)
+      .forEach(relCard => {
+        const relName = relCard.querySelector('h3').textContent;
+        const relPrice = relCard.querySelector('.price').textContent;
+        const relThumbClone = relCard.querySelector('.product-thumb').cloneNode(true);
+        const relTagEl = relThumbClone.querySelector('.category-tag');
+        if(relTagEl) relTagEl.remove();
+        const relItem = document.createElement('div');
+        relItem.className = 'related-card';
+        relItem.innerHTML = `
+          <div class="related-thumb">${relThumbClone.innerHTML}</div>
+          <div class="related-body">
+            <span class="name">${relName}</span>
+            <span class="price">${relPrice}</span>
+          </div>
+        `;
+        relItem.addEventListener('click', () => openDetail(relCard));
+        relatedGrid.appendChild(relItem);
+      });
+
+    panel.querySelector('.detail-close').addEventListener('click', () => closeDetail());
+
+    return panel;
+  }
+
+  function closeDetail(){
+    if(openPanel) openPanel.remove();
+    if(openCard) openCard.classList.remove('active');
+    openPanel = null;
+    openCard = null;
+  }
+
+  function openDetail(card){
+    const reopeningSame = openCard === card;
+    closeDetail();
+    if(reopeningSame) return;
+
+    const panel = buildDetailPanel(card);
+    card.insertAdjacentElement('afterend', panel);
+    card.classList.add('active');
+    openCard = card;
+    openPanel = panel;
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => openDetail(card));
+  });
 </script>
 
 </body>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Pemesanan — OS Kacamata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-light:#F6F3EC;
+    --bg-panel:#FFFFFF;
+    --bg-dark:#15181C;
+    --ink:#1B1D21;
+    --ink-soft:#5C5F66;
+    --line:#DDD6C6;
+    --gold:#B8862F;
+    --gold-soft:#E8D9B8;
+    --teal:#3F6259;
+    --radius-lens: 999px;
+    --maxw: 720px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--bg-light);
+    line-height:1.55;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    margin:0 0 .4em 0;
+    letter-spacing:-0.01em;
+  }
+  p{margin:0 0 1em 0; color:var(--ink-soft);}
+  a{color:inherit;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
+  @media (max-width:480px){ .wrap{padding:0 16px;} }
+
+  header.site-nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(246,243,236,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:16px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Fraunces',serif; font-size:19px; font-weight:600;
+    text-decoration:none; color:var(--ink);
+  }
+  .brand-mark{
+    width:28px; height:18px; border:2px solid var(--gold); border-radius:50% / 60%; position:relative;
+  }
+  .brand-mark::after{
+    content:""; position:absolute; left:100%; top:50%; width:7px; height:2px;
+    background:var(--gold); transform:translateY(-50%);
+  }
+  .back-link{font-size:13.5px; text-decoration:none; color:var(--ink-soft);}
+  .back-link:hover{color:var(--ink);}
+
+  .page-head{padding:48px 0 32px;}
+  @media (max-width:480px){ .page-head{padding:36px 0 24px;} }
+  .eyebrow{font-size:13px; color:var(--gold); font-weight:600; margin-bottom:10px;}
+  .page-head h1{font-size:clamp(24px,5vw,32px);}
+
+  .content{padding-bottom:80px;}
+
+  .card{
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:20px; padding:28px;
+  }
+  @media (max-width:480px){ .card{padding:20px;} }
+  .card h2{font-size:16px; margin-bottom:18px;}
+  .card h2:not(:first-child){margin-top:8px;}
+
+  .form-group{margin-bottom:20px;}
+  .form-group:last-child{margin-bottom:0;}
+  label{display:block; font-size:13px; font-weight:600; margin-bottom:8px;}
+  .form-grid-2{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media (max-width:520px){ .form-grid-2{grid-template-columns:1fr;} }
+
+  input[type="text"], input[type="tel"], input[type="number"], select, textarea{
+    width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:10px;
+    font-size:14.5px; font-family:inherit; background:var(--bg-light); color:var(--ink); outline:none;
+  }
+  input:focus, select:focus, textarea:focus{border-color:var(--gold);}
+  textarea{min-height:80px; resize:vertical;}
+  .hint{font-size:12.5px; color:var(--ink-soft); margin-top:6px;}
+
+  .radio-group{display:flex; gap:10px; flex-wrap:wrap;}
+  .radio-chip{
+    border:1px solid var(--line); background:var(--bg-light); padding:9px 16px;
+    border-radius:var(--radius-lens); font-size:13.5px; cursor:pointer; position:relative;
+  }
+  .radio-chip input{position:absolute; opacity:0; inset:0; cursor:pointer; margin:0;}
+  .radio-chip.active{background:var(--ink); color:#fff; border-color:var(--ink);}
+
+  .ukuran-blocks{margin-top:18px; display:grid; gap:16px;}
+  .ukuran-block{display:none; padding:16px; border:1px solid var(--line); border-radius:12px; background:var(--bg-light);}
+  .ukuran-block.show{display:block;}
+  .ukuran-block > label{margin-bottom:12px;}
+  .sub-label{font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:14px 24px; border-radius:var(--radius-lens); font-size:15px; font-weight:600;
+    cursor:pointer; border:1px solid transparent; text-decoration:none; font-family:inherit;
+  }
+  .btn-primary{background:var(--gold); color:#fff; width:100%;}
+  .btn-primary:hover{opacity:.92;}
+  .btn-outline{background:none; border-color:var(--line); color:var(--ink); width:100%;}
+  .btn-outline:hover{border-color:var(--ink);}
+
+  .receipt-wrap{display:none;}
+  .receipt-wrap.show{display:block;}
+  .form-wrap.hide{display:none;}
+
+  .receipt-card{
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:20px; padding:32px;
+  }
+  @media (max-width:480px){ .receipt-card{padding:22px;} }
+  .receipt-head{text-align:center; margin-bottom:24px;}
+  .receipt-head .check{
+    width:52px; height:52px; border-radius:50%; background:var(--gold-soft); color:var(--gold);
+    display:flex; align-items:center; justify-content:center; font-size:24px; margin:0 auto 16px;
+  }
+  .receipt-head h2{font-size:20px; margin-bottom:6px;}
+  .receipt-id{font-size:13px; color:var(--ink-soft);}
+  .receipt-divider{border-top:1.5px dashed var(--line); margin:22px 0;}
+  .receipt-row{display:flex; justify-content:space-between; gap:16px; margin-bottom:12px; font-size:14px;}
+  .receipt-row .k{color:var(--ink-soft);}
+  .receipt-row .v{font-weight:600; text-align:right;}
+  .receipt-total{
+    display:flex; justify-content:space-between; align-items:center; margin-top:6px;
+    font-family:'Fraunces',serif; font-size:19px;
+  }
+  .receipt-status{
+    display:inline-block; margin-top:18px; padding:6px 14px; border-radius:var(--radius-lens);
+    background:#EAF3EE; color:var(--teal); font-size:12.5px; font-weight:600;
+  }
+  .receipt-actions{display:grid; gap:12px; margin-top:28px;}
+
+  @media print{
+    header.site-nav, .receipt-actions{display:none;}
+    body{background:#fff;}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="brand-mark"></span> OS Kacamata</a>
+    <a href="katalog.html" class="back-link">← Kembali ke Katalog</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="page-head">
+    <div class="eyebrow">FORM PEMESANAN</div>
+    <h1>Pesan Kacamata</h1>
+    <p>Lengkapi data di bawah ini, tim kami akan menghubungi lewat WhatsApp untuk konfirmasi.</p>
+  </section>
+
+  <div class="content">
+
+    <div class="form-wrap" id="formWrap">
+      <div class="card">
+        <h2>Detail Kacamata</h2>
+        <div class="form-group">
+          <label for="namaKacamata">Nama Kacamata</label>
+          <input type="text" id="namaKacamata" placeholder="Nama produk">
+        </div>
+
+        <div class="form-group">
+          <label for="jumlahPesan">Jumlah</label>
+          <input type="number" id="jumlahPesan" min="1" value="1">
+        </div>
+
+        <div class="form-group">
+          <label for="warnaKacamata">Pilihan Warna</label>
+          <select id="warnaKacamata">
+            <option value="Hitam">Hitam</option>
+            <option value="Coklat Tortoise">Coklat Tortoise</option>
+            <option value="Silver">Silver</option>
+            <option value="Gold">Gold</option>
+            <option value="Transparan">Transparan</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="jenisLensa">Jenis Lensa</label>
+          <select id="jenisLensa">
+            <option value="Normal">Normal</option>
+            <option value="Blue Chromic">Blue Chromic</option>
+            <option value="Photochromic">Photochromic</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Jenis Tambahan</label>
+          <div class="radio-group" id="tambahanGroup">
+            <label class="radio-chip">
+              <input type="checkbox" name="jenisTambahan" value="Nightdrive"> Nightdrive
+            </label>
+            <label class="radio-chip">
+              <input type="checkbox" name="jenisTambahan" value="Anti Embun"> Anti Embun
+            </label>
+          </div>
+          <p class="hint">Bisa pilih lebih dari satu, atau kosongkan jika tidak perlu.</p>
+        </div>
+
+        <div class="form-group">
+          <label>Masalah Mata</label>
+          <div class="radio-group" id="masalahMataGroup">
+            <label class="radio-chip active">
+              <input type="checkbox" name="masalahMata" value="normal" checked> Normal
+            </label>
+            <label class="radio-chip">
+              <input type="checkbox" name="masalahMata" value="minus"> Minus
+            </label>
+            <label class="radio-chip">
+              <input type="checkbox" name="masalahMata" value="plus"> Plus
+            </label>
+            <label class="radio-chip">
+              <input type="checkbox" name="masalahMata" value="silinder"> Silinder
+            </label>
+          </div>
+          <p class="hint">Bisa pilih lebih dari satu, mis. Minus dan Silinder sekaligus.</p>
+
+          <div class="ukuran-blocks" id="ukuranBlocks">
+            <div class="ukuran-block" data-for="minus">
+              <label>Ukuran Minus</label>
+              <div class="form-grid-2">
+                <div>
+                  <label class="sub-label">Mata Kanan (OD)</label>
+                  <input type="number" step="0.25" class="ukuranKanan" data-cond="minus" placeholder="-1.00">
+                </div>
+                <div>
+                  <label class="sub-label">Mata Kiri (OS)</label>
+                  <input type="number" step="0.25" class="ukuranKiri" data-cond="minus" placeholder="-1.00">
+                </div>
+              </div>
+            </div>
+            <div class="ukuran-block" data-for="plus">
+              <label>Ukuran Plus</label>
+              <div class="form-grid-2">
+                <div>
+                  <label class="sub-label">Mata Kanan (OD)</label>
+                  <input type="number" step="0.25" class="ukuranKanan" data-cond="plus" placeholder="+1.00">
+                </div>
+                <div>
+                  <label class="sub-label">Mata Kiri (OS)</label>
+                  <input type="number" step="0.25" class="ukuranKiri" data-cond="plus" placeholder="+1.00">
+                </div>
+              </div>
+            </div>
+            <div class="ukuran-block" data-for="silinder">
+              <label>Ukuran Silinder</label>
+              <div class="form-grid-2">
+                <div>
+                  <label class="sub-label">Mata Kanan (OD)</label>
+                  <input type="number" step="0.25" class="ukuranKanan" data-cond="silinder" placeholder="-0.50">
+                </div>
+                <div>
+                  <label class="sub-label">Mata Kiri (OS)</label>
+                  <input type="number" step="0.25" class="ukuranKiri" data-cond="silinder" placeholder="-0.50">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h2>Data Pemesan</h2>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="namaPemesan">Nama Lengkap</label>
+            <input type="text" id="namaPemesan" placeholder="Nama kamu" required>
+          </div>
+          <div class="form-group">
+            <label for="waPemesan">Nomor WhatsApp</label>
+            <input type="tel" id="waPemesan" placeholder="08xxxxxxxxxx" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="alamatPemesan">Alamat Pengiriman</label>
+          <textarea id="alamatPemesan" placeholder="Alamat lengkap untuk pengiriman"></textarea>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h2>Ringkasan Harga</h2>
+        <div class="receipt-row"><span class="k">Harga Produk</span><span class="v" id="sHarga">Rp0</span></div>
+        <div class="receipt-row"><span class="k">Tambahan Jenis Lensa</span><span class="v" id="sLensaExtra">+Rp0</span></div>
+        <div class="receipt-row"><span class="k">Tambahan Jenis Perawatan</span><span class="v" id="sTambahanExtra">+Rp0</span></div>
+        <div class="receipt-row"><span class="k">Jumlah</span><span class="v" id="sJumlah">1</span></div>
+        <div class="receipt-divider"></div>
+        <div class="receipt-total"><span>Total</span><span id="sTotal">Rp0</span></div>
+      </div>
+
+      <div style="margin-top:24px;">
+        <button type="button" class="btn btn-primary" id="submitPesanBtn">Pesan</button>
+      </div>
+    </div>
+
+    <div class="receipt-wrap" id="receiptWrap">
+      <div class="receipt-card">
+        <div class="receipt-head">
+          <div class="check">✓</div>
+          <h2>Pesanan Berhasil Dibuat</h2>
+          <div class="receipt-id" id="receiptId">No. Pesanan: —</div>
+        </div>
+
+        <div class="receipt-divider"></div>
+
+        <div class="receipt-row"><span class="k">Tanggal</span><span class="v" id="rTanggal">—</span></div>
+        <div class="receipt-row"><span class="k">Nama Kacamata</span><span class="v" id="rNama">—</span></div>
+        <div class="receipt-row"><span class="k">Jumlah</span><span class="v" id="rJumlah">—</span></div>
+        <div class="receipt-row"><span class="k">Warna</span><span class="v" id="rWarna">—</span></div>
+        <div class="receipt-row"><span class="k">Jenis Lensa</span><span class="v" id="rLensa">—</span></div>
+        <div class="receipt-row"><span class="k">Jenis Tambahan</span><span class="v" id="rTambahan">—</span></div>
+        <div class="receipt-row"><span class="k">Masalah Mata</span><span class="v" id="rMasalah">—</span></div>
+        <div id="rUkuranContainer"></div>
+
+        <div class="receipt-divider"></div>
+
+        <div class="receipt-row"><span class="k">Pemesan</span><span class="v" id="rPemesan">—</span></div>
+        <div class="receipt-row"><span class="k">WhatsApp</span><span class="v" id="rWa">—</span></div>
+        <div class="receipt-row"><span class="k">Alamat</span><span class="v" id="rAlamat">—</span></div>
+
+        <div class="receipt-divider"></div>
+
+        <div class="receipt-total"><span>Total</span><span id="rHarga">Rp0</span></div>
+        <span class="receipt-status">Menunggu Konfirmasi</span>
+
+        <div class="receipt-actions">
+          <button type="button" class="btn btn-outline" onclick="window.print()">Cetak Kwitansi</button>
+          <a href="katalog.html" class="btn btn-primary">Pesan Produk Lain</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const produkParam = params.get('produk') || '';
+  const hargaParam = params.get('harga') || 'Rp0';
+  const jumlahParam = params.get('jumlah') || '1';
+
+  const namaKacamata = document.getElementById('namaKacamata');
+  if(produkParam) namaKacamata.value = produkParam;
+
+  const jumlahPesan = document.getElementById('jumlahPesan');
+  jumlahPesan.value = jumlahParam;
+
+  const jenisLensa = document.getElementById('jenisLensa');
+  const lensaParam = params.get('lensa');
+  if(lensaParam) jenisLensa.value = lensaParam;
+
+  const radioChips = document.querySelectorAll('#masalahMataGroup .radio-chip');
+  const ukuranBlocks = document.querySelectorAll('.ukuran-block');
+
+  function getCheckbox(value){
+    return document.querySelector('input[name="masalahMata"][value="' + value + '"]');
+  }
+
+  function updateUkuranVisibility(){
+    ['minus', 'plus', 'silinder'].forEach(cond => {
+      const checked = getCheckbox(cond).checked;
+      document.querySelector('.ukuran-block[data-for="' + cond + '"]').classList.toggle('show', checked);
+    });
+  }
+
+  radioChips.forEach(chip => {
+    const input = chip.querySelector('input');
+    input.addEventListener('change', () => {
+      if(input.value === 'normal'){
+        if(input.checked){
+          ['minus', 'plus', 'silinder'].forEach(cond => { getCheckbox(cond).checked = false; });
+        }
+      }else if(input.checked){
+        getCheckbox('normal').checked = false;
+      }else{
+        const anyChecked = ['minus', 'plus', 'silinder'].some(cond => getCheckbox(cond).checked);
+        if(!anyChecked) getCheckbox('normal').checked = true;
+      }
+
+      radioChips.forEach(c => c.classList.toggle('active', c.querySelector('input').checked));
+      updateUkuranVisibility();
+    });
+  });
+
+  function parseRupiah(str){
+    return parseInt(String(str).replace(/[^0-9-]/g, ''), 10) || 0;
+  }
+  function formatRupiah(num){
+    return 'Rp' + num.toLocaleString('id-ID');
+  }
+
+  const lensPriceMap = { 'Normal': 0, 'Blue Chromic': 150000, 'Photochromic': 300000 };
+  const tambahanPriceMap = { 'Nightdrive': 100000, 'Anti Embun': 50000 };
+  const basePrice = parseRupiah(hargaParam);
+
+  function calculateTotal(){
+    const lensExtra = lensPriceMap[jenisLensa.value] || 0;
+    const selectedTambahan = Array.from(document.querySelectorAll('input[name="jenisTambahan"]:checked')).map(i => i.value);
+    const tambahanExtra = selectedTambahan.reduce((sum, val) => sum + (tambahanPriceMap[val] || 0), 0);
+    const jumlah = Math.max(1, parseInt(jumlahPesan.value || '1', 10));
+    const unitTotal = basePrice + lensExtra + tambahanExtra;
+    const grandTotal = unitTotal * jumlah;
+    return { lensExtra, tambahanExtra, jumlah, unitTotal, grandTotal };
+  }
+
+  function updatePriceSummary(){
+    const { lensExtra, tambahanExtra, jumlah, grandTotal } = calculateTotal();
+    document.getElementById('sHarga').textContent = formatRupiah(basePrice);
+    document.getElementById('sLensaExtra').textContent = '+' + formatRupiah(lensExtra);
+    document.getElementById('sTambahanExtra').textContent = '+' + formatRupiah(tambahanExtra);
+    document.getElementById('sJumlah').textContent = jumlah;
+    document.getElementById('sTotal').textContent = formatRupiah(grandTotal);
+  }
+
+  jenisLensa.addEventListener('change', updatePriceSummary);
+  jumlahPesan.addEventListener('input', updatePriceSummary);
+  document.querySelectorAll('input[name="jenisTambahan"]').forEach(cb => cb.addEventListener('change', updatePriceSummary));
+
+  const tambahanChips = document.querySelectorAll('#tambahanGroup .radio-chip');
+  tambahanChips.forEach(chip => {
+    const input = chip.querySelector('input');
+    input.addEventListener('change', () => chip.classList.toggle('active', input.checked));
+  });
+
+  const formWrap = document.getElementById('formWrap');
+  const receiptWrap = document.getElementById('receiptWrap');
+  const submitPesanBtn = document.getElementById('submitPesanBtn');
+
+  const masalahLabel = { normal: 'Normal', minus: 'Minus', plus: 'Plus', silinder: 'Silinder' };
+
+  submitPesanBtn.addEventListener('click', () => {
+    const namaPemesan = document.getElementById('namaPemesan').value;
+    const waPemesan = document.getElementById('waPemesan').value;
+
+    if(!namaPemesan || !waPemesan){
+      alert('Mohon lengkapi nama dan nomor WhatsApp terlebih dahulu.');
+      return;
+    }
+
+    const warna = document.getElementById('warnaKacamata').value;
+    const alamat = document.getElementById('alamatPemesan').value || '-';
+
+    const selectedConditions = ['minus', 'plus', 'silinder'].filter(cond => getCheckbox(cond).checked);
+    const isNormal = selectedConditions.length === 0;
+
+    const orderId = 'OSK-' + Date.now().toString().slice(-8);
+    const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    document.getElementById('receiptId').textContent = 'No. Pesanan: ' + orderId;
+    document.getElementById('rTanggal').textContent = today;
+    document.getElementById('rNama').textContent = namaKacamata.value || '-';
+    document.getElementById('rJumlah').textContent = jumlahPesan.value || '1';
+    document.getElementById('rWarna').textContent = warna;
+    document.getElementById('rLensa').textContent = document.getElementById('jenisLensa').value;
+
+    const selectedTambahan = Array.from(document.querySelectorAll('input[name="jenisTambahan"]:checked')).map(i => i.value);
+    document.getElementById('rTambahan').textContent = selectedTambahan.length ? selectedTambahan.join(' + ') : 'Tidak ada';
+
+    document.getElementById('rMasalah').textContent = isNormal
+      ? 'Normal'
+      : selectedConditions.map(c => masalahLabel[c]).join(' + ');
+
+    const rUkuranContainer = document.getElementById('rUkuranContainer');
+    rUkuranContainer.innerHTML = '';
+    selectedConditions.forEach(cond => {
+      const kanan = document.querySelector('.ukuranKanan[data-cond="' + cond + '"]').value || '0';
+      const kiri = document.querySelector('.ukuranKiri[data-cond="' + cond + '"]').value || '0';
+      const row = document.createElement('div');
+      row.className = 'receipt-row';
+      row.innerHTML = `<span class="k">Ukuran ${masalahLabel[cond]}</span><span class="v">Kanan ${kanan} / Kiri ${kiri}</span>`;
+      rUkuranContainer.appendChild(row);
+    });
+
+    document.getElementById('rPemesan').textContent = namaPemesan;
+    document.getElementById('rWa').textContent = waPemesan;
+    document.getElementById('rAlamat').textContent = alamat;
+
+    const { grandTotal } = calculateTotal();
+    document.getElementById('rHarga').textContent = formatRupiah(grandTotal);
+
+    formWrap.classList.add('hide');
+    receiptWrap.classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  updateUkuranVisibility();
+  updatePriceSummary();
+</script>
+
+</body>
+</html>
